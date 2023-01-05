@@ -43,6 +43,8 @@ const PostWrapper = styled.div`
 
   @media (max-width: 937px) {
     border-radius: 0px;
+    gap: 10px;
+    padding: 10px;
   }
 `;
 
@@ -80,10 +82,16 @@ const LinkWrapper = styled.div`
   justify-content: space-between;
   width: 100%;
   cursor: pointer;
+  @media (max-width:  937px) {
+    align-items: flex-start;
+  }
 `;
 
 const LinkDescriptions = styled.div`
   padding: 24px;
+  @media (max-width:  937px) {
+    padding: 8px;
+  }
 `;
 
 const LinkTitle = styled.h1`
@@ -96,6 +104,9 @@ const LinkTitle = styled.h1`
   overflow-wrap: break-word;
   word-break: break-all;
   color: #cecece;
+  @media (max-width: 937px) {
+    font-size: 11px;
+  }
 `;
 
 const LinkDescription = styled.p`
@@ -106,6 +117,9 @@ const LinkDescription = styled.p`
   line-height: 13px;
   color: #9b9595;
   margin: 10px 0;
+  @media (max-width: 937px) {
+    font-size: 9px;
+  }
 `;
 
 const LinkUrl = styled.p`
@@ -115,6 +129,9 @@ const LinkUrl = styled.p`
   font-size: 11px;
   line-height: 13px;
   color: #cecece;
+  @media (max-width: 937px) {
+    font-size: 9px;
+  }
 `;
 
 const LinkImage = styled.img`

@@ -117,7 +117,7 @@ const PostsWrapper = styled.div`
   flex-direction: column;
   gap: 29px;
 
-  @media (max-width:  937px) {
+  @media (max-width: 937px) {
     width: 100%;
   }
 `;
@@ -136,4 +136,8 @@ export const UserImage = styled.img`
   width: 50px;
   height: 50px;
   object-fit: cover;
+  @media (max-width: 937px) {
+    width: 40px;
+    height: 40px;
+  }
 `;
