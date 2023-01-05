@@ -105,6 +105,9 @@ export default function Timeline() {
 const TimeLineWrapper = styled.div`
   width: 937px;
   margin: 78px auto 0 auto;
+  @media (max-width: 937px) {
+    width: 100%;
+  }
 `;
 
 const PostsWrapper = styled.div`
@@ -113,6 +116,10 @@ const PostsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 29px;
+
+  @media (max-width:  937px) {
+    width: 100%;
+  }
 `;
 
 const Message = styled.p`

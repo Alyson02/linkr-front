@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { UserImage } from "..";
+import useWindowDimensions from "../../../components/GetWindowDimensions";
 
 export default function PostWriter({
   setLink,
@@ -9,9 +10,13 @@ export default function PostWriter({
   onFinish,
   loading,
 }) {
+  const { width } = useWindowDimensions();
+
   return (
     <PostWriterWrapper>
-      <UserImage src="https://pop.proddigital.com.br/wp-content/uploads/sites/8/2022/10/2f24e280b7c0c94000d91133fe1552cc1665499260-main.png" />
+      {width > 937 && (
+        <UserImage src="https://pop.proddigital.com.br/wp-content/uploads/sites/8/2022/10/2f24e280b7c0c94000d91133fe1552cc1665499260-main.png" />
+      )}
       <PostForm onSubmit={onFinish}>
         <PostWriterTitle>What are you going to share today?</PostWriterTitle>
         <InputLink
@@ -43,9 +48,11 @@ const PostWriterWrapper = styled.div`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
   gap: 18px;
+
+  @media (max-width: 937px) {
+    border-radius: 0px;
+  }
 `;
-
-
 
 const PostForm = styled.form`
   display: flex;

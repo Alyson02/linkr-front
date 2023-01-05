@@ -39,6 +39,11 @@ const PostWrapper = styled.div`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
   gap: 18px;
+  overflow: hidden;
+
+  @media (max-width: 937px) {
+    border-radius: 0px;
+  }
 `;
 
 const PostBody = styled.div`
@@ -87,6 +92,9 @@ const LinkTitle = styled.h1`
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;
+  line-break: normal;
+  overflow-wrap: break-word;
+  word-break: break-all;
   color: #cecece;
 `;
 
@@ -113,4 +121,10 @@ const LinkImage = styled.img`
   width: 155px;
   height: 155px;
   object-fit: cover;
+  border-radius: inherit;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  @media (max-width: 937px) {
+    width: 95px;
+  }
 `;
