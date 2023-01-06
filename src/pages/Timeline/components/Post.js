@@ -1,30 +1,72 @@
 import { useNavigation } from "react-router";
 import styled from "styled-components";
 import { UserImage } from "..";
+import { BsHeart, BsHeartFill } from "react-icons/bs";
+import { useState } from "react";
+import { Api } from "../../../services/api";
+import swal from "sweetalert";
 
 export default function Post({ post }) {
+  const [liked, setLiked] = useState(post.liked);
+  const [likes, setLikes] = useState(Number(post.likes));
+
+  function likeOrDislike(id) {
+    setLiked(!liked);
+    liked ? setLikes(likes - 1) : setLikes(likes + 1);
+
+    Api.post(`/like-or-dislike/${id}`).catch(() =>
+      swal("", "Erro ao registrar like", "error")
+    );
+  }
+
   return (
     <PostWrapper>
-      <UserImage src={post.userImage} />
+      <UserLikesContainer>
+        <UserImage src={post.userImage} />
+        <h3>
+          {liked ? (
+            <BsHeartFill
+              onClick={() => likeOrDislike(post.id)}
+              cursor={"pointer"}
+              color="#AC0000"
+              size={20}
+            />
+          ) : (
+            <BsHeart
+              onClick={() => likeOrDislike(post.id)}
+              cursor={"pointer"}
+              color="white"
+              size={20}
+            />
+          )}
+        </h3>
+        <TextLikes>
+          {likes} like{likes > 1 && "s"}
+        </TextLikes>
+      </UserLikesContainer>
       <PostBody>
         <PostUsername>{post.username}</PostUsername>
         <PostContent>{post.content}</PostContent>
-        <LinkWrapper onClick={() => window.open(post.link.url)}>
-          <LinkDescriptions>
-            <LinkTitle>{post.link.title}</LinkTitle>
-            <LinkDescription>{post.link.description}</LinkDescription>
-            <LinkUrl>{post.link.url}</LinkUrl>
-          </LinkDescriptions>
-          <LinkImage
-            src={post.link.image}
-            alt=""
-            onError={({ currentTarget }) => {
-              currentTarget.onerror = null; // prevents looping
-              currentTarget.src =
-                "https://rafaturis.com.br/wp-content/uploads/2014/01/default-placeholder.png";
-            }}
-          />
-        </LinkWrapper>
+        {post.link.success ? (
+          <LinkWrapper onClick={() => window.open(post.link.url)}>
+            <LinkDescriptions>
+              <LinkTitle>{post.link.title}</LinkTitle>
+              <LinkDescription>{post.link.description}</LinkDescription>
+              <LinkUrl>{post.link.url}</LinkUrl>
+            </LinkDescriptions>
+            <LinkImage
+              src={post.link.image}
+              alt=""
+              onError={({ currentTarget }) => {
+                currentTarget.onerror = null; // prevents looping
+                currentTarget.src =
+                  "https://rafaturis.com.br/wp-content/uploads/2014/01/default-placeholder.png";
+              }}
+            />
+          </LinkWrapper>
+        ) : (
+          <LinkUrl style={{ fontSize: 12 }}>{post.link.url}</LinkUrl>
+        )}
       </PostBody>
     </PostWrapper>
   );
@@ -46,6 +88,23 @@ const PostWrapper = styled.div`
     gap: 10px;
     padding: 10px;
   }
+`;
+
+const UserLikesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+`;
+
+const TextLikes = styled.div`
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  text-align: center;
+  color: #ffffff;
 `;
 
 const PostBody = styled.div`
@@ -82,14 +141,14 @@ const LinkWrapper = styled.div`
   justify-content: space-between;
   width: 100%;
   cursor: pointer;
-  @media (max-width:  937px) {
+  @media (max-width: 937px) {
     align-items: flex-start;
   }
 `;
 
 const LinkDescriptions = styled.div`
   padding: 24px;
-  @media (max-width:  937px) {
+  @media (max-width: 937px) {
     padding: 8px;
   }
 `;
