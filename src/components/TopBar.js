@@ -5,29 +5,27 @@ import { AiOutlineSearch } from 'react-icons/ai'
 import { DebounceInput } from 'react-debounce-input'
 import { Api } from "../services/api"
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import useWindowDimensions from "./GetWindowDimensions"
 
-function UserSearch({ user }) {
-
-    const navigate = useNavigate()
+function UserSearch({ user, setUsers }) {
 
     return (
         <UserSearchContainer>
-            {/* <Link to={`/user/${user.id}`}> */}
-            <div onClick={() => navigate(`/user/${user.id}`)}>
+            <Link to={`/user/${user.id}`}>
+            <div onClick={() => setUsers([])}>
                 <img src={user.pictureUrl} />
                 <span>{user.username}</span>
             </div>
-            {/* </Link> */}
+            </Link>
         </UserSearchContainer>
     )
 }
 
-function Result({ users }) {
+function Result({ users, setUsers }) {
     return (
         <ResultContainer>
-            {users.map(u => <UserSearch user={u} key={u.id} />)}
+            {users.map(u => <UserSearch user={u} setUsers={setUsers} key={u.id} />)}
         </ResultContainer>
     )
 }
@@ -64,7 +62,7 @@ export default function TopBar() {
                                     setUsers([])
                                 }
                             }} />
-                            <Result users={users} />
+                            <Result users={users} setUsers={setUsers} />
                             <AiOutlineSearch size={25} color='#C6C6C6' />
                         </InputContainer>
                     ) : ''
@@ -192,6 +190,7 @@ box-sizing: border-box;
 
 const UserSearchContainer = styled.div`
 padding: 10px;
+cursor: pointer;
 
 div {
     display: flex;
@@ -204,9 +203,10 @@ img {
     width: 40px;
     height: 40px;
     object-fit: cover;
+
     @media (max-width: 937px) {
-    width: 30px;
-    height: 30px;
+        width: 30px;
+        height: 30px;
     }
 }
 
