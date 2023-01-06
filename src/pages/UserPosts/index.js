@@ -37,7 +37,7 @@ export default function UserPosts() {
 
         getPosts()
 
-    }, [])
+    }, [id])
 
     function CarregaPosts() {
         if (error) {
