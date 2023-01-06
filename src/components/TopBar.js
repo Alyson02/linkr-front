@@ -6,6 +6,7 @@ import { DebounceInput } from 'react-debounce-input'
 import { Api } from "../services/api"
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import useWindowDimensions from "./GetWindowDimensions"
 
 function UserSearch({ user }) {
 
@@ -14,10 +15,10 @@ function UserSearch({ user }) {
     return (
         <UserSearchContainer>
             {/* <Link to={`/user/${user.id}`}> */}
-                <div onClick={() => navigate(`/user/${user.id}`)}>
-                    <img src={user.pictureUrl} />
-                    <span>{user.username}</span>
-                </div>
+            <div onClick={() => navigate(`/user/${user.id}`)}>
+                <img src={user.pictureUrl} />
+                <span>{user.username}</span>
+            </div>
             {/* </Link> */}
         </UserSearchContainer>
     )
@@ -35,6 +36,7 @@ export default function TopBar() {
 
     const [users, setUsers] = useState([])
     let nameSearched = ''
+    const window = useWindowDimensions()
 
     async function search(value) {
         try {
@@ -49,23 +51,45 @@ export default function TopBar() {
 
     return (
         <TopBarContainer>
-            <p>linkr</p>
-            <InputContainer>
-                <DebounceInput minLength={3} debounceTimeout={300} placeholder='Search for people' onChange={e => {
-                    nameSearched = e.target.value
-                    if (nameSearched.length > 0) {
-                        search(nameSearched)
-                    } else {
-                        setUsers([])
-                    }
-                }} />
-                <Result users={users} />
-                <AiOutlineSearch size={25} color='#C6C6C6' />
-            </InputContainer>
-            <ProfileContainer>
-                <IoIosArrowDown color='white' size={25} />
-                <UserImage src='' />
-            </ProfileContainer>
+            <div>
+                <p>linkr</p>
+                {window.width > 937 ?
+                    (
+                        <InputContainer>
+                            <DebounceInput minLength={3} debounceTimeout={300} placeholder='Search for people' onChange={e => {
+                                nameSearched = e.target.value
+                                if (nameSearched.length > 0) {
+                                    search(nameSearched)
+                                } else {
+                                    setUsers([])
+                                }
+                            }} />
+                            <Result users={users} />
+                            <AiOutlineSearch size={25} color='#C6C6C6' />
+                        </InputContainer>
+                    ) : ''
+                }
+                <ProfileContainer>
+                    <IoIosArrowDown color='white' size={25} />
+                    <UserImage src='' />
+                </ProfileContainer>
+            </div>
+            {window.width <= 937 ?
+                (
+                    <InputContainer>
+                        <DebounceInput minLength={3} debounceTimeout={300} placeholder='Search for people' onChange={e => {
+                            nameSearched = e.target.value
+                            if (nameSearched.length > 0) {
+                                search(nameSearched)
+                            } else {
+                                setUsers([])
+                            }
+                        }} />
+                        <Result users={users} />
+                        <AiOutlineSearch size={25} color='#C6C6C6' />
+                    </InputContainer>
+                ) : ''
+            }
         </TopBarContainer>
     )
 }
@@ -75,12 +99,21 @@ display: flex;
 position: fixed;
 top: 0;
 left: 0;
-align-items: center;
-justify-content: space-between;
+flex-direction: column;
 background-color: black;
 height: 72px;
 width: 100%;
 padding: 0 20px;
+
+@media (max-width: 937px) {
+    height: 144px;
+}
+
+& > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
 p {
     font-family: 'Passion One', cursive;
@@ -101,6 +134,10 @@ justify-content: space-between;
 padding-right: 10px;
 position: relative;
 border-top: solid 1px white;
+
+@media (max-width: 937px) {
+    width: 100%;
+}
 
 input {
     display: flex;
@@ -144,7 +181,13 @@ z-index: -1;
 border-radius: 0 0 8px 8px;
 background-color: #E7E7E7;
 gap: 10px;
-box-sizing: border-box
+box-sizing: border-box;
+
+@media (max-width: 937px) {
+    top: 113px;
+    width: calc(100% - 40px);
+    box-sizing: border-box;
+}
 `
 
 const UserSearchContainer = styled.div`
