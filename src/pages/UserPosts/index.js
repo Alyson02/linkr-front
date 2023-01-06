@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import styled from "styled-components"
 import { Api } from "../../services/api"
-import Post from "../Timeline/components/Post"
+import Post from "../../components/Post"
 import { TailSpin } from "react-loader-spinner";
 import PageTitle from "../../components/pageTitle";
-import { UserImage } from "../Timeline"
+import TopBar from "../../components/TopBar"
+import { TimeLineWrapper } from "../../components/TimeLineWrapper"
+import { PostsWrapper } from "../../components/PostsWrapper"
+import { Message } from "../../components/Message"
+import { UserImage } from "../../components/UserImage";
 
 export default function UserPosts() {
 
     let { id } = useParams()
-
     const [posts, setPosts] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
@@ -57,6 +59,7 @@ export default function UserPosts() {
 
     return (
         <TimeLineWrapper>
+            <TopBar />
             <PageTitle>
                 <UserImage src={user.pictureUrl} />
                 {loading ? '' : (
@@ -81,32 +84,3 @@ export default function UserPosts() {
         </TimeLineWrapper >
     );
 }
-
-const TimeLineWrapper = styled.div`
-  width: 937px;
-  margin: 78px auto 0 auto;
-  @media (max-width: 937px) {
-    width: 100%;
-  }
-`;
-
-const PostsWrapper = styled.div`
-  margin-top: 43px;
-  width: 611px;
-  display: flex;
-  flex-direction: column;
-  gap: 29px;
-
-  @media (max-width: 937px) {
-    width: 100%;
-  }
-`;
-
-const Message = styled.p`
-  font-family: "Lato";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  color: #9b9595;
-  text-align: center;
-`;

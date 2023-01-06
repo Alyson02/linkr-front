@@ -1,9 +1,9 @@
 import { useNavigation } from "react-router";
 import styled from "styled-components";
-import { UserImage } from "..";
+import { UserImage } from "../pages/Timeline";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { useState } from "react";
-import { Api } from "../../../services/api";
+import { Api } from "../services/api";
 import swal from "sweetalert";
 import { Link } from "react-router-dom";
 
