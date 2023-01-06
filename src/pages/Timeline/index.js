@@ -1,11 +1,14 @@
 import { cleanup } from "@testing-library/react";
 import { useEffect, useState } from "react";
 import { TailSpin } from "react-loader-spinner";
-import styled from "styled-components";
 import swal from "sweetalert";
+import { Message } from "../../components/Message";
 import PageTitle from "../../components/pageTitle";
+import Post from "../../components/Post";
+import { PostsWrapper } from "../../components/PostsWrapper";
+import { TimeLineWrapper } from "../../components/TimeLineWrapper";
+import TopBar from "../../components/TopBar";
 import { Api } from "../../services/api";
-import Post from "./components/Post";
 import PostWriter from "./components/PostWriter";
 
 export default function Timeline() {
@@ -74,6 +77,7 @@ export default function Timeline() {
 
   return (
     <TimeLineWrapper>
+      <TopBar />
       <PageTitle>Timeline</PageTitle>
       <PostsWrapper>
         <PostWriter
@@ -101,43 +105,3 @@ export default function Timeline() {
     </TimeLineWrapper>
   );
 }
-
-const TimeLineWrapper = styled.div`
-  width: 937px;
-  margin: 78px auto 0 auto;
-  @media (max-width: 937px) {
-    width: 100%;
-  }
-`;
-
-const PostsWrapper = styled.div`
-  margin-top: 43px;
-  width: 611px;
-  display: flex;
-  flex-direction: column;
-  gap: 29px;
-
-  @media (max-width: 937px) {
-    width: 100%;
-  }
-`;
-
-const Message = styled.p`
-  font-family: "Lato";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  color: #9b9595;
-  text-align: center;
-`;
-
-export const UserImage = styled.img`
-  border-radius: 26.5px;
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  @media (max-width: 937px) {
-    width: 40px;
-    height: 40px;
-  }
-`;
