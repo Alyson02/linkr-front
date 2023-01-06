@@ -5,6 +5,7 @@ import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { useState } from "react";
 import { Api } from "../../../services/api";
 import swal from "sweetalert";
+import { Link } from "react-router-dom";
 
 export default function Post({ post }) {
   const [liked, setLiked] = useState(post.liked);
@@ -22,7 +23,7 @@ export default function Post({ post }) {
   return (
     <PostWrapper>
       <UserLikesContainer>
-        <UserImage src={post.userImage} />
+        <Link to={`/user/${post.userId}`}><UserImage src={post.userImage} /></Link>
         <h3>
           {liked ? (
             <BsHeartFill
@@ -45,7 +46,7 @@ export default function Post({ post }) {
         </TextLikes>
       </UserLikesContainer>
       <PostBody>
-        <PostUsername>{post.username}</PostUsername>
+        <Link to={`/user/${post.userId}`}><PostUsername>{post.username}</PostUsername></Link>
         <PostContent>{post.content}</PostContent>
         {post.link.success ? (
           <LinkWrapper onClick={() => window.open(post.link.url)}>
