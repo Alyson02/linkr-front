@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { UserImage } from "..";
 import useWindowDimensions from "../../../components/GetWindowDimensions";
+import { UserImage } from "../../../components/UserImage";
 
 export default function PostWriter({
   setLink,
