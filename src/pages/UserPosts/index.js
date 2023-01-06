@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom"
 import { Api } from "../../services/api"
 import Post from "../../components/Post"
 import { TailSpin } from "react-loader-spinner";
-import PageTitle from "../../components/pageTitle";
+import PageTitle from "../../components/PageTitle";
 import TopBar from "../../components/TopBar"
 import { TimeLineWrapper } from "../../components/TimeLineWrapper"
 import { PostsWrapper } from "../../components/PostsWrapper"
@@ -37,7 +37,7 @@ export default function UserPosts() {
 
         getPosts()
 
-    }, [])
+    }, [id])
 
     function CarregaPosts() {
         if (error) {
