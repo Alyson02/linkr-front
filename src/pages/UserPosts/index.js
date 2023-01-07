@@ -53,7 +53,7 @@ export default function UserPosts() {
             return <Message>There are no posts yet</Message>;
         }
 
-        return posts.map((p) => <Post post={p} key={p.id} />);
+        return posts.map((p) => <Post id={id} post={p} key={p.id} />);
     }
 
 
