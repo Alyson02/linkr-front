@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { TailSpin } from "react-loader-spinner";
 import swal from "sweetalert";
 import { Message } from "../../components/Message";
-import PageTitle from "../../components/pageTitle";
+import PageTitle from "../../components/PageTitle";
 import Post from "../../components/Post";
 import { PostsWrapper } from "../../components/PostsWrapper";
 import { TimeLineWrapper } from "../../components/TimeLineWrapper";

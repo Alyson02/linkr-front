@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom"
 import { Api } from "../../services/api"
 import Post from "../../components/Post"
 import { TailSpin } from "react-loader-spinner";
-import PageTitle from "../../components/pageTitle";
+import PageTitle from "../../components/PageTitle";
 import TopBar from "../../components/TopBar"
 import { TimeLineWrapper } from "../../components/TimeLineWrapper"
 import { PostsWrapper } from "../../components/PostsWrapper"
@@ -18,13 +18,21 @@ export default function UserPosts() {
     const [error, setError] = useState(false)
     const [user, setUser] = useState([])
 
+    const token = ''
+
     useEffect(() => {
 
         const getPosts = async () => {
 
             try {
 
-                const res = (await Api.get(`/user/${id}`)).data
+                const config = {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+
+                const res = (await Api.get(`/user/${id}`, {}, config)).data
                 setPosts(res.posts)
                 setUser(res.user)
                 setLoading(false);
@@ -37,7 +45,7 @@ export default function UserPosts() {
 
         getPosts()
 
-    }, [])
+    }, [id])
 
     function CarregaPosts() {
         if (error) {
@@ -53,7 +61,7 @@ export default function UserPosts() {
             return <Message>There are no posts yet</Message>;
         }
 
-        return posts.map((p) => <Post post={p} key={p.id} />);
+        return posts.map((p) => <Post id={id} post={p} key={p.id} />);
     }
 
 

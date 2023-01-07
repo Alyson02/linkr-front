@@ -7,7 +7,7 @@ import swal from "sweetalert";
 import { Link } from "react-router-dom";
 import { UserImage } from "./UserImage";
 
-export default function Post({ post }) {
+export default function Post({ post, id }) {
   const [liked, setLiked] = useState(post.liked);
   const [likes, setLikes] = useState(Number(post.likes));
 
@@ -23,7 +23,7 @@ export default function Post({ post }) {
   return (
     <PostWrapper>
       <UserLikesContainer>
-        <Link to={`/user/${post.userId}`}><UserImage src={post.userImage} /></Link>
+        <Link to={id ? `/user/${id}` : `/user/${post.userId}`}><UserImage src={post.userImage} /></Link>
         <h3>
           {liked ? (
             <BsHeartFill
@@ -114,6 +114,10 @@ const PostBody = styled.div`
   justify-content: start;
   width: 100%;
   gap: 5px;
+
+  a {
+    text-decoration: none
+  }
 `;
 
 const PostUsername = styled.p`
