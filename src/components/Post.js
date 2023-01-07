@@ -2,7 +2,7 @@ import { useNavigation } from "react-router";
 import React from "react";
 import styled from "styled-components";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
-import { FaTrash } from "react-icons/fa"
+import { FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import { Api } from "../services/api";
 import swal from "sweetalert";
@@ -11,18 +11,17 @@ import { UserImage } from "./UserImage";
 
 import { Tooltip as ReactTooltip, TooltipWrapper } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
-import Modal from 'styled-react-modal';
+import Modal from "styled-react-modal";
 import { TailSpin } from "react-loader-spinner";
 import { useNavigate } from "react-router";
-
 
 export default function Post({ post, id }) {
   const [liked, setLiked] = useState(post.liked);
   const [likes, setLikes] = useState(Number(post.likes));
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  let subtitle
+  let subtitle;
 
   function likeOrDislike(id) {
     setLiked(!liked);
@@ -32,7 +31,6 @@ export default function Post({ post, id }) {
       swal("", "Erro ao registrar like", "error")
     );
   }
-
 
   function tooltipMessage() {
     const previewPleoplesCount = post.peoples.length;
@@ -49,7 +47,7 @@ export default function Post({ post, id }) {
     } else {
       return `${pessoa1}, ${pessoa2} and other ${likes - 2}  peoples`;
     }
-
+  }
   function openModal() {
     setIsOpen(true);
   }
@@ -58,19 +56,16 @@ export default function Post({ post, id }) {
   }
   function delPost() {
     setLoading(true);
-    
+
     Api.delete(`/post/${post.id}`)
-      .then(()=>{
-        navigate('/timeline');
+      .then(() => {
+        navigate("/timeline");
       })
-      .catch(() =>{
-        swal("", "Erro ao deletar post", "error")
+      .catch(() => {
+        swal("", "Erro ao deletar post", "error");
         closeModal();
         setLoading(false);
-      }
-      
-    );
-
+      });
   }
 
   return (
@@ -109,14 +104,16 @@ export default function Post({ post, id }) {
       <PostBody>
         <ContentContainer>
           <div>
-            <Link to={`/user/${post.userId}`}><PostUsername>{post.username}</PostUsername></Link>
+            <Link to={`/user/${post.userId}`}>
+              <PostUsername>{post.username}</PostUsername>
+            </Link>
             <PostContent>{post.content}</PostContent>
           </div>
           <div>
             <FaTrash
               cursor={"pointer"}
               color={"white"}
-              size={'25px'}
+              size={"25px"}
               onClick={openModal}
             />
           </div>
@@ -140,10 +137,14 @@ export default function Post({ post, id }) {
             />
           ) : (
             <>
-              <ContentModal ref={(_subtitle) => (subtitle = _subtitle)}>Are you sure you want to delete this post?</ContentModal>
+              <ContentModal ref={(_subtitle) => (subtitle = _subtitle)}>
+                Are you sure you want to delete this post?
+              </ContentModal>
               <div>
-                <ButtonModalNo onClick={closeModal}>No, go back</ButtonModalNo >
-                <ButtonModalYes onClick={delPost}>Yes, delete it</ButtonModalYes>
+                <ButtonModalNo onClick={closeModal}>No, go back</ButtonModalNo>
+                <ButtonModalYes onClick={delPost}>
+                  Yes, delete it
+                </ButtonModalYes>
               </div>
             </>
           )}
@@ -319,19 +320,19 @@ const StyledModal = Modal.styled`
   align-items: center;
   background: #333333;
   border-radius: 50px;
-`
+`;
 
 const ContentModal = styled.h1`
   width: 338px;
   margin-bottom: 30px;
-  font-family: 'Lato';
+  font-family: "Lato";
   font-style: normal;
   font-weight: 700;
   font-size: 34px;
   line-height: 41px;
   text-align: center;
-  color: #FFFFFF;
-`
+  color: #ffffff;
+`;
 
 const ButtonModalNo = styled.button`
   cursor: pointer;
@@ -339,23 +340,23 @@ const ButtonModalNo = styled.button`
   height: 37px;
   border: none;
   margin-right: 15px;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 5px;
-  color: #1877F2;
-`
+  color: #1877f2;
+`;
 
 const ButtonModalYes = styled.button`
   width: 134px;
   height: 37px;
   border: none;
-  background: #1877F2;
+  background: #1877f2;
   border-radius: 5px;
-  color: #FFFFFF;
+  color: #ffffff;
   cursor: pointer;
-`
+`;
 
 const ContentContainer = styled.div`
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
