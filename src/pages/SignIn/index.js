@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import styled from 'styled-components';
@@ -19,6 +19,15 @@ export default function Timeline() {
         email: email,
         password: password
     }
+
+    useEffect(() => {
+        const loggedInUser = localStorage.getItem("user");
+        if (loggedInUser) {
+            const foundUser = JSON.parse(loggedInUser);
+            setUser(foundUser);
+            navigate(`/timeline`);
+        }
+      }, []);
 
     function loginSuccess(data) {
         setUser(user);
