@@ -4,7 +4,7 @@ import axios from "axios";
 import styled from 'styled-components';
 import { AuthContext } from "../../contexts/auth";
 
-export default function Timeline() {
+export default function SignIn() {
 
     const navigate = useNavigate();
 
