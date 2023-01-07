@@ -3,6 +3,8 @@ import GlobalStyle from "./components/GlobalStyle";
 import SignIn from "./pages/SignIn";
 import TimeLine from "./pages/Timeline";
 import UserPosts from "./pages/UserPosts";
+import { TooltipProvider } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 import styled from "styled-components";
 import { BaseModalBackground } from "styled-react-modal";
 import { ModalProvider } from "styled-react-modal";
@@ -14,14 +16,16 @@ const ModalBackground = styled(BaseModalBackground)`
 export default function App() {
   return (
     <ModalProvider backgroundComponent={ModalBackground}>
+     <TooltipProvider>
       <BrowserRouter>
         <GlobalStyle />
         <Routes>
           <Route element={<SignIn />} path="/" />
           <Route element={<TimeLine />} path="/timeline" />
-          <Route element={<UserPosts />} path='/user/:id' />
+          <Route element={<UserPosts />} path="/user/:id" />
         </Routes>
       </BrowserRouter>
+    </TooltipProvider>
     </ModalProvider>
   );
 }
