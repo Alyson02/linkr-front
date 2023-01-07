@@ -5,10 +5,18 @@ import TimeLine from "./pages/Timeline";
 import UserPosts from "./pages/UserPosts";
 import { TooltipProvider } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
+import styled from "styled-components";
+import { BaseModalBackground } from "styled-react-modal";
+import { ModalProvider } from "styled-react-modal";
+
+const ModalBackground = styled(BaseModalBackground)`
+  background: rgba(255, 255, 255, 0.8);
+`
 
 export default function App() {
   return (
-    <TooltipProvider>
+    <ModalProvider backgroundComponent={ModalBackground}>
+     <TooltipProvider>
       <BrowserRouter>
         <GlobalStyle />
         <Routes>
@@ -18,5 +26,6 @@ export default function App() {
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
+    </ModalProvider>
   );
 }

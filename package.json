@@ -16,6 +16,7 @@
     "react-scripts": "5.0.1",
     "react-tooltip": "^5.4.0",
     "styled-components": "^5.3.6",
+    "styled-react-modal": "^3.0.1",
     "sweetalert": "^2.1.2",
     "web-vitals": "^2.1.4"
   },
