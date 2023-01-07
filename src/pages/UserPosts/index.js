@@ -18,13 +18,21 @@ export default function UserPosts() {
     const [error, setError] = useState(false)
     const [user, setUser] = useState([])
 
+    const token = ''
+
     useEffect(() => {
 
         const getPosts = async () => {
 
             try {
 
-                const res = (await Api.get(`/user/${id}`)).data
+                const config = {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+
+                const res = (await Api.get(`/user/${id}`, {}, config)).data
                 setPosts(res.posts)
                 setUser(res.user)
                 setLoading(false);
