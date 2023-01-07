@@ -9,11 +9,15 @@ import swal from "sweetalert";
 import { Link } from "react-router-dom";
 import { UserImage } from "./UserImage";
 import Modal from 'styled-react-modal';
+import { TailSpin } from "react-loader-spinner";
+import { useNavigate } from "react-router";
 
 export default function Post({ post, id }) {
   const [liked, setLiked] = useState(post.liked);
   const [likes, setLikes] = useState(Number(post.likes));
-  const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [loading,setLoading] = useState(false);
+  const navigate = useNavigate();
   let subtitle
 
   function likeOrDislike(id) {
@@ -32,7 +36,19 @@ export default function Post({ post, id }) {
     setIsOpen(false);
   }
   function delPost() {
-    closeModal(); 
+    setLoading(true);
+    
+    Api.delete(`/post/${post.id}`)
+      .then(()=>{
+        navigate('/timeline');
+      })
+      .catch(() =>{
+        swal("", "Erro ao deletar post", "error")
+        closeModal();
+        setLoading(false);
+      }
+      
+    );
   }
 
   return (
@@ -82,11 +98,25 @@ export default function Post({ post, id }) {
           contentLabel="Modal"
           opacity={1}
         >
-          <ContentModal ref={(_subtitle) => (subtitle = _subtitle)}>Are you sure you want to delete this post?</ContentModal>
-          <div>
-            <ButtonModalNo onClick={closeModal}>No, go back</ButtonModalNo >
-            <ButtonModalYes onClick={delPost}>Yes, delete it</ButtonModalYes>
-          </div>
+          {loading ? (
+            <TailSpin
+              height="40"
+              width="100%"
+              color="#1877f2"
+              ariaLabel="tail-spin-loading"
+              radius="1"
+              visible={true}
+              wrapperStyle={{ marginTop: "40px" }}
+            />
+          ) : (
+            <>
+              <ContentModal ref={(_subtitle) => (subtitle = _subtitle)}>Are you sure you want to delete this post?</ContentModal>
+              <div>
+                <ButtonModalNo onClick={closeModal}>No, go back</ButtonModalNo >
+                <ButtonModalYes onClick={delPost}>Yes, delete it</ButtonModalYes>
+              </div>
+            </>
+          )}
         </StyledModal>
         {post.link.success ? (
           <LinkWrapper onClick={() => window.open(post.link.url)}>
