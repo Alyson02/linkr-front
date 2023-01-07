@@ -1,15 +1,12 @@
 import { useNavigation } from "react-router";
 import styled from "styled-components";
+import { UserImage } from "..";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { useState } from "react";
-import { Api } from "../services/api";
+import { Api } from "../../../services/api";
 import swal from "sweetalert";
-import { Link } from "react-router-dom";
-import { UserImage } from "./UserImage";
-import { Tooltip as ReactTooltip, TooltipWrapper } from "react-tooltip";
-import "react-tooltip/dist/react-tooltip.css";
 
-export default function Post({ post, id }) {
+export default function Post({ post }) {
   const [liked, setLiked] = useState(post.liked);
   const [likes, setLikes] = useState(Number(post.likes));
 
@@ -22,60 +19,33 @@ export default function Post({ post, id }) {
     );
   }
 
-  function tooltipMessage() {
-    const previewPleoplesCount = post.peoples.length;
-    const pessoa1 = post.peoples[0].username;
-    const pessoa2 = post.peoples[1]?.username;
-    if (previewPleoplesCount === 0) {
-      return `you`;
-    } else if (liked && previewPleoplesCount === 1) {
-      return `you and ${pessoa1}`;
-    } else if (liked && previewPleoplesCount >= 2) {
-      return `you, ${pessoa1} and other ${likes - 2}  peoples`;
-    } else if (previewPleoplesCount === 1) {
-      return `${pessoa1}`;
-    } else {
-      return `${pessoa1}, ${pessoa2} and other ${likes - 2}  peoples`;
-    }
-  }
-
   return (
     <PostWrapper>
       <UserLikesContainer>
-        <Link to={id ? `/user/${id}` : `/user/${post.userId}`}>
-          <UserImage src={post.userImage} />
-        </Link>
+        <UserImage src={post.userImage} />
         <h3>
           {liked ? (
-            <TooltipWrapper content={tooltipMessage()}>
-              <BsHeartFill
-                onClick={() => likeOrDislike(post.id)}
-                cursor={"pointer"}
-                color="#AC0000"
-                size={20}
-                id={post.id}
-              />
-            </TooltipWrapper>
+            <BsHeartFill
+              onClick={() => likeOrDislike(post.id)}
+              cursor={"pointer"}
+              color="#AC0000"
+              size={20}
+            />
           ) : (
-            <TooltipWrapper content={tooltipMessage()}>
-              <BsHeart
-                onClick={() => likeOrDislike(post.id)}
-                cursor={"pointer"}
-                color="white"
-                size={20}
-              />
-            </TooltipWrapper>
+            <BsHeart
+              onClick={() => likeOrDislike(post.id)}
+              cursor={"pointer"}
+              color="white"
+              size={20}
+            />
           )}
-          <ReactTooltip />
         </h3>
         <TextLikes>
           {likes} like{likes > 1 && "s"}
         </TextLikes>
       </UserLikesContainer>
       <PostBody>
-        <Link to={`/user/${post.userId}`}>
-          <PostUsername>{post.username}</PostUsername>
-        </Link>
+        <PostUsername>{post.username}</PostUsername>
         <PostContent>{post.content}</PostContent>
         {post.link.success ? (
           <LinkWrapper onClick={() => window.open(post.link.url)}>
@@ -143,10 +113,6 @@ const PostBody = styled.div`
   justify-content: start;
   width: 100%;
   gap: 5px;
-
-  a {
-    text-decoration: none;
-  }
 `;
 
 const PostUsername = styled.p`
