@@ -81,7 +81,7 @@ const Page = styled.div`
     justify-content: space-between;
     background: #333333;
 
-    @media(max-width: 750px) {
+    @media(max-width: 937px) {
         flex-direction: column;
     }
 `;
@@ -117,7 +117,7 @@ const LeftContainer = styled.div`
         color: #FFFFFF;
     }
 
-    @media(max-width: 750px) {
+    @media(max-width: 937px) {
         width: 100%;
         height: 13.11844077961019%;
         padding: 10px 69px 27px 69px;
@@ -154,7 +154,7 @@ const RightContainer = styled.div`
         color: #FFFFFF;
     }
 
-    @media(max-width: 750px) {
+    @media(max-width: 937px) {
         height: 0;
         padding: 40px 22px 0 23px;
 
@@ -210,7 +210,7 @@ const LoginForm = styled.form`
         align-items: center;
     }
 
-    @media(max-width: 750px) {
+    @media(max-width: 937px) {
         input {
             height: 55px;
             margin-bottom: 11px;

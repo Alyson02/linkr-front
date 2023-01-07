@@ -6,7 +6,10 @@ import { Message } from "../../components/Message";
 import PageTitle from "../../components/PageTitle";
 import Post from "../../components/Post";
 import { PostsWrapper } from "../../components/PostsWrapper";
+import { Wrapper } from "../../components/Wrapper";
 import { TimeLineWrapper } from "../../components/TimeLineWrapper";
+import { TrendingWrapper, TrendingBar } from "../../components/TrendingWrapper";
+import HashtagList from "./components/HashtagList";
 import TopBar from "../../components/TopBar";
 import { Api } from "../../services/api";
 import PostWriter from "./components/PostWriter";
@@ -76,32 +79,41 @@ export default function Timeline() {
   }
 
   return (
-    <TimeLineWrapper>
-      <TopBar />
-      <PageTitle>Timeline</PageTitle>
-      <PostsWrapper>
-        <PostWriter
-          setLink={setLink}
-          link={link}
-          setContent={setContent}
-          content={content}
-          onFinish={onFinish}
-          loading={submiting}
-        />
-        {loading ? (
-          <TailSpin
-            height="40"
-            width="100%"
-            color="#1877f2"
-            ariaLabel="tail-spin-loading"
-            radius="1"
-            visible={true}
-            wrapperStyle={{ marginTop: "40px" }}
-          />
-        ) : (
-          <CarregaPosts />
-        )}
-      </PostsWrapper>
-    </TimeLineWrapper>
+    <>
+      <TimeLineWrapper>
+        <TopBar />
+        <PageTitle>Timeline</PageTitle>
+        <Wrapper>
+          <PostsWrapper>
+            <PostWriter
+              setLink={setLink}
+              link={link}
+              setContent={setContent}
+              content={content}
+              onFinish={onFinish}
+              loading={submiting}
+            />
+            {loading ? (
+              <TailSpin
+                height="40"
+                width="100%"
+                color="#1877f2"
+                ariaLabel="tail-spin-loading"
+                radius="1"
+                visible={true}
+                wrapperStyle={{ marginTop: "40px" }}
+              />
+            ) : (
+              <CarregaPosts />
+            )}
+          </PostsWrapper>
+          <TrendingWrapper>
+            <h1>trending</h1>
+            <TrendingBar></TrendingBar>
+            <HashtagList />
+          </TrendingWrapper>
+        </Wrapper>
+      </TimeLineWrapper>
+    </>
   );
 }
