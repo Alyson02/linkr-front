@@ -36,10 +36,18 @@ export default function TopBar() {
     let nameSearched = ''
     const window = useWindowDimensions()
 
+    const token = ''
+
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    }
+
     async function search(value) {
         try {
 
-            const res = (await Api.get(`/user/search/${value}`)).data
+            const res = (await Api.get(`/user/search/${value}`, {}, config)).data
             setUsers(res)
 
         } catch (err) {
