@@ -114,6 +114,10 @@ const PostBody = styled.div`
   justify-content: start;
   width: 100%;
   gap: 5px;
+
+  a {
+    text-decoration: none
+  }
 `;
 
 const PostUsername = styled.p`
