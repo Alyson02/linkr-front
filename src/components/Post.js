@@ -1,4 +1,4 @@
-import { useNavigation } from "react-router";
+import { useNavigate } from "react-router";
 import React from "react";
 import styled from "styled-components";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
@@ -8,12 +8,14 @@ import { Api } from "../services/api";
 import swal from "sweetalert";
 import { Link } from "react-router-dom";
 import { UserImage } from "./UserImage";
-
+import {FaPencilAlt} from "react-icons/fa";
+import { useRef } from "react";
+import { useEffect } from "react";
+import { ReactTagify } from "react-tagify";
 import { Tooltip as ReactTooltip, TooltipWrapper } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import Modal from "styled-react-modal";
 import { TailSpin } from "react-loader-spinner";
-import { useNavigate } from "react-router";
 
 export default function Post({ post, id }) {
   const [liked, setLiked] = useState(post.liked);
@@ -21,7 +23,19 @@ export default function Post({ post, id }) {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [postContent,setPostContent] = useState(post.content);
+  const [edit,setEdit] = useState(false);
+  const [editLoading,setEditLoading] = useState(false);
+  const inputRef = useRef(null);
+  const [textPost,setTextPost] = useState(post.content);
   let subtitle;
+  const foundUser = JSON.parse(localStorage.getItem("user"));
+
+  useEffect(() => {
+    if (edit) {
+      inputRef.current.focus();
+    }
+  }, [edit]);
 
   function likeOrDislike(id) {
     setLiked(!liked);
@@ -107,17 +121,66 @@ export default function Post({ post, id }) {
             <Link to={`/user/${post.userId}`}>
               <PostUsername>{post.username}</PostUsername>
             </Link>
-            <PostContent>{post.content}</PostContent>
           </div>
-          <div>
-            <FaTrash
-              cursor={"pointer"}
-              color={"white"}
-              size={"25px"}
-              onClick={openModal}
-            />
-          </div>
+          {foundUser.id === post.userId ? 
+            <div>
+              <FaPencilAlt
+                className="edit"
+                cursor={"pointer"}
+                color={"white"}
+                size={'25px'}
+                onClick={()=> setEdit(!edit)}
+              />
+              <FaTrash
+                cursor={"pointer"}
+                color={"white"}
+                size={"25px"}
+                onClick={openModal}
+              />
+            </div>
+          :
+          ''
+          }
+
         </ContentContainer>
+        {
+          edit === true ? 
+            <InputContent
+              ref={inputRef}
+              value={postContent}
+              onKeyDown={
+                (e)=>{
+                  if(e.key === 'Escape'){
+                    setEdit(false);
+                  }
+                  if(e.key === 'Enter'){
+                    setEditLoading(true);
+
+                    Api.put(`/post/${post.id}`,{content:postContent}).then((e)=>{
+                      setTextPost(postContent)
+                      setEditLoading(false);
+                      setEdit(false)
+                    }).catch(() =>{
+                      swal("", "Erro ao editar post", "error")
+                      setEditLoading(false);
+                      }
+                    );
+                  }
+                  
+                }
+              }
+              disabled={editLoading}
+              onChange={(e) => {setPostContent(e.target.value);}}
+            /> 
+          : 
+          <ReactTagify 
+            colors={"white"} 
+            tagClicked={(tag)=> navigate('/hashtags/'+tag.replace('#',''))}
+          >
+             <PostContent>{textPost}</PostContent>
+          </ReactTagify>
+
+        }
         <StyledModal
           onBackgroundClick={closeModal}
           isOpen={modalIsOpen}
@@ -359,4 +422,28 @@ const ContentContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  svg{
+    margin-right: 10px;
+  }
+`;
+
+
+const InputContent = styled.textarea`
+  background: #ffffff;
+  border-radius: 5px;
+  width: 100%;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  padding: 12px;
+  min-height: 66px;
+  resize: vertical;
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  
+  color: #4C4C4C;
+
 `;
