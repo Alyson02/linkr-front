@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import styled from 'styled-components';
+import { AuthContext } from "../../contexts/auth";
 
-export default function Timeline() {
+export default function SignIn() {
 
     const navigate = useNavigate();
 
@@ -11,6 +12,28 @@ export default function Timeline() {
 
     const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+
+    const {setUser} = useContext(AuthContext);
+
+    const user = {
+        email: email,
+        password: password
+    }
+
+    useEffect(() => {
+        const loggedInUser = localStorage.getItem("user");
+        if (loggedInUser) {
+            const foundUser = JSON.parse(loggedInUser);
+            setUser(foundUser);
+            navigate(`/timeline`);
+        }
+      }, []);
+
+    function loginSuccess(data) {
+        setUser(user);
+        localStorage.setItem('user', data);
+        navigate(`/timeline`);
+    }
 
     function loginFail(error) {
         if (error.response.status === 422) {
@@ -27,12 +50,9 @@ export default function Timeline() {
         setIsDisabled(true);
 		const request = axios.post(
             "https://linkr-ipaw.onrender.com/signin",
-            {
-                email: email,
-                password: password
-            }
+            user
         );
-        request.then(() => navigate('/timeline'));
+        request.then(() => loginSuccess(request.data));
         request.catch(error => loginFail(error));
     }
 
