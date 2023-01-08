@@ -1,4 +1,4 @@
-import { useNavigate, useNavigation } from "react-router";
+import { useNavigate } from "react-router";
 import React from "react";
 import styled from "styled-components";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
@@ -16,8 +16,6 @@ import { Tooltip as ReactTooltip, TooltipWrapper } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import Modal from "styled-react-modal";
 import { TailSpin } from "react-loader-spinner";
-import { useNavigate } from "react-router";
-
 export default function Post({ post, id }) {
   const [liked, setLiked] = useState(post.liked);
   const [likes, setLikes] = useState(Number(post.likes));
@@ -123,6 +121,7 @@ export default function Post({ post, id }) {
           </div>
           <div>
             <FaPencilAlt
+              className="edit"
               cursor={"pointer"}
               color={"white"}
               size={'25px'}
@@ -414,6 +413,9 @@ const ContentContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  svg{
+    margin-right: 10px;
+  }
 `;
 
 
