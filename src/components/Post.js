@@ -16,6 +16,7 @@ import { Tooltip as ReactTooltip, TooltipWrapper } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import Modal from "styled-react-modal";
 import { TailSpin } from "react-loader-spinner";
+
 export default function Post({ post, id }) {
   const [liked, setLiked] = useState(post.liked);
   const [likes, setLikes] = useState(Number(post.likes));
