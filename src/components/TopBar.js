@@ -4,9 +4,10 @@ import { UserImage } from "./UserImage";
 import { AiOutlineSearch } from "react-icons/ai";
 import { DebounceInput } from "react-debounce-input";
 import { Api } from "../services/api";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import useWindowDimensions from "./GetWindowDimensions";
+import { AuthContext } from "../contexts/auth";
 
 function UserSearch({ user, setUsers }) {
   return (
@@ -35,6 +36,8 @@ export default function TopBar() {
   const [users, setUsers] = useState([]);
   let nameSearched = "";
   const window = useWindowDimensions();
+
+  const auth = useContext(AuthContext);
 
   const token = "";
 
@@ -80,7 +83,7 @@ export default function TopBar() {
         )}
         <ProfileContainer>
           <IoIosArrowDown color="white" size={25} />
-          <UserImage src="" />
+          <UserImage src={auth.user.user.pictureUrl} />
         </ProfileContainer>
       </div>
       {window.width <= 937 ? (

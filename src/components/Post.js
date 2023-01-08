@@ -34,9 +34,12 @@ export default function Post({ post, id }) {
 
   function tooltipMessage() {
     const previewPleoplesCount = post.peoples.length;
-    const pessoa1 = post.peoples[0].username;
+    const pessoa1 = post.peoples[0]?.username;
     const pessoa2 = post.peoples[1]?.username;
-    if (previewPleoplesCount === 0) {
+    if(previewPleoplesCount === 0){
+      return `nothing people liked this post`
+    }
+    else if (previewPleoplesCount === 0 && liked) {
       return `you`;
     } else if (liked && previewPleoplesCount === 1) {
       return `you and ${pessoa1}`;
