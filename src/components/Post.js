@@ -1,4 +1,3 @@
-import { useNavigation } from "react-router";
 import React from "react";
 import styled from "styled-components";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
@@ -8,7 +7,6 @@ import { Api } from "../services/api";
 import swal from "sweetalert";
 import { Link } from "react-router-dom";
 import { UserImage } from "./UserImage";
-
 import { Tooltip as ReactTooltip, TooltipWrapper } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import Modal from "styled-react-modal";
