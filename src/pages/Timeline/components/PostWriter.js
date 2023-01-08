@@ -17,7 +17,7 @@ export default function PostWriter({
 
   return (
     <PostWriterWrapper>
-      {width > 937 && <UserImage src={auth.user.user.pictureUrl} />}
+      {width > 937 && <UserImage src={auth.user?.user?.pictureUrl} />}
       <PostForm onSubmit={onFinish}>
         <PostWriterTitle>What are you going to share today?</PostWriterTitle>
         <InputLink

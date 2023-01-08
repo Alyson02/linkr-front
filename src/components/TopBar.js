@@ -75,7 +75,7 @@ export default function TopBar() {
         )}
         <ProfileContainer>
           <IoIosArrowDown color="white" size={25} />
-          <UserImage src={auth.user.user.pictureUrl} />
+          <UserImage src={auth.user?.user?.pictureUrl} />
         </ProfileContainer>
       </div>
       {window.width <= 937 ? (
