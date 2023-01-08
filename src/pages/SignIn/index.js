@@ -30,7 +30,7 @@ export default function SignIn() {
 
   function loginSuccess(data) {
     console.log(data);
-    setUser(user);
+    setUser(data);
     localStorage.setItem("user", JSON.stringify(data));
     navigate(`/timeline`);
   }

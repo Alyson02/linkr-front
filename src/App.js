@@ -24,10 +24,10 @@ const ModalBackground = styled(BaseModalBackground)`
 `;
 
 const WithNav = () => (
-  <>
+  <ProtectedLayout>
     <TopBar />
     <Outlet />
-  </>
+  </ProtectedLayout>
 );
 
 export default function App() {
@@ -41,22 +41,8 @@ export default function App() {
               <Route element={<SignIn />} path="/" />
               <Route element={<Singup />} path="/signup" />
               <Route element={<WithNav />}>
-                <Route
-                  element={
-                    <ProtectedLayout>
-                      <TimeLine />
-                    </ProtectedLayout>
-                  }
-                  path="/timeline"
-                />
-                <Route
-                  element={
-                    <ProtectedLayout>
-                      <UserPosts />
-                    </ProtectedLayout>
-                  }
-                  path="/user/:id"
-                />
+                <Route element={<TimeLine />} path="/timeline" />
+                <Route element={<UserPosts />} path="/user/:id" />
               </Route>
             </Routes>
           </Router>
