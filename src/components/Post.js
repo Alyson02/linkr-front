@@ -27,7 +27,9 @@ export default function Post({ post, id }) {
   const [edit,setEdit] = useState(false);
   const [editLoading,setEditLoading] = useState(false);
   const inputRef = useRef(null);
+  const [textPost,setTextPost] = useState(post.content);
   let subtitle;
+  const foundUser = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     if (edit) {
@@ -120,21 +122,26 @@ export default function Post({ post, id }) {
               <PostUsername>{post.username}</PostUsername>
             </Link>
           </div>
-          <div>
-            <FaPencilAlt
-              className="edit"
-              cursor={"pointer"}
-              color={"white"}
-              size={'25px'}
-              onClick={()=>setEdit(!edit)}
-            />
-            <FaTrash
-              cursor={"pointer"}
-              color={"white"}
-              size={"25px"}
-              onClick={openModal}
-            />
-          </div>
+          {foundUser.id === post.userId ? 
+            <div>
+              <FaPencilAlt
+                className="edit"
+                cursor={"pointer"}
+                color={"white"}
+                size={'25px'}
+                onClick={()=> setEdit(!edit)}
+              />
+              <FaTrash
+                cursor={"pointer"}
+                color={"white"}
+                size={"25px"}
+                onClick={openModal}
+              />
+            </div>
+          :
+          ''
+          }
+
         </ContentContainer>
         {
           edit === true ? 
@@ -149,7 +156,8 @@ export default function Post({ post, id }) {
                   if(e.key === 'Enter'){
                     setEditLoading(true);
 
-                    Api.put(`/post/${post.id}`).then(()=>{
+                    Api.put(`/post/${post.id}`,{content:postContent}).then((e)=>{
+                      setTextPost(postContent)
                       setEditLoading(false);
                       setEdit(false)
                     }).catch(() =>{
@@ -162,14 +170,14 @@ export default function Post({ post, id }) {
                 }
               }
               disabled={editLoading}
-              onChange={(e) => setPostContent(e.target.value)}
+              onChange={(e) => {setPostContent(e.target.value);}}
             /> 
           : 
           <ReactTagify 
             colors={"white"} 
             tagClicked={(tag)=> navigate('/hashtags/'+tag.replace('#',''))}
           >
-             <PostContent>{post.content}</PostContent>
+             <PostContent>{textPost}</PostContent>
           </ReactTagify>
 
         }
