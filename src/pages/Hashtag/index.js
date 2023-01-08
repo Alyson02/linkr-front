@@ -34,7 +34,7 @@ export default function Hashtag() {
         setLoading(false);
         console.log(error.response.data);
     });
-}, [user]);
+}, []);
 
   function CarregaPosts() {
     if (error) {
