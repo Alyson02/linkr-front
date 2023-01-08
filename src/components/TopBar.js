@@ -39,17 +39,9 @@ export default function TopBar() {
 
   const auth = useContext(AuthContext);
 
-  const token = "";
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
   async function search(value) {
     try {
-      const res = (await Api.get(`/user/search/${value}`, {}, config)).data;
+      const res = (await Api.get(`/user/search/${value}`)).data;
       setUsers(res);
     } catch (err) {
       console.log(err);
