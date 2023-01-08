@@ -17,6 +17,7 @@ import { ModalProvider } from "styled-react-modal";
 import Singup from "./pages/Signup";
 import { ProtectedLayout } from "./components/ProtectedLayout";
 import TopBar from "./components/TopBar";
+import HashtagTimeline from "./pages/HashtagTimeline";
 
 const ModalBackground = styled(BaseModalBackground)`
   background: rgba(255, 255, 255, 0.8);
