@@ -77,7 +77,6 @@ export default function Timeline() {
 
   return (
     <TimeLineWrapper>
-      <TopBar />
       <PageTitle>Timeline</PageTitle>
       <PostsWrapper>
         <PostWriter
