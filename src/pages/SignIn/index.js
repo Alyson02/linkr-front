@@ -86,7 +86,7 @@ export default function SignIn() {
                         Log In
                     </button>
                 </LoginForm>
-                <Link data-identifier="sign-up-action" to={`/sign-up`}>
+                <Link data-identifier="sign-up-action" to={`/signup`}>
                     <p>First time? Create an account!</p>
                 </Link>
             </RightContainer>
