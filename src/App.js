@@ -10,6 +10,7 @@ import styled from "styled-components";
 import { BaseModalBackground } from "styled-react-modal";
 import { ModalProvider } from "styled-react-modal";
 import Singup from "./pages/Signup";
+import { ProtectedLayout } from "./components/ProtectedLayout";
 
 const ModalBackground = styled(BaseModalBackground)`
   background: rgba(255, 255, 255, 0.8);
@@ -21,14 +22,28 @@ export default function App() {
       <TooltipProvider>
         <BrowserRouter>
           <GlobalStyle />
-           <AuthProvider>
-          <Routes>
-            <Route element={<SignIn />} path="/" />
-            <Route element={<TimeLine />} path="/timeline" />
-            <Route element={<UserPosts />} path="/user/:id" />
-            <Route element={<Singup />} path="/signup" />
-          </Routes>
-           </AuthProvider>
+          <AuthProvider>
+            <Routes>
+              <Route element={<SignIn />} path="/" />
+              <Route
+                element={
+                  <ProtectedLayout>
+                    <TimeLine />
+                  </ProtectedLayout>
+                }
+                path="/timeline"
+              />
+              <Route
+                element={
+                  <ProtectedLayout>
+                    <UserPosts />
+                  </ProtectedLayout>
+                }
+                path="/user/:id"
+              />
+              <Route element={<Singup />} path="/signup" />
+            </Routes>
+          </AuthProvider>
         </BrowserRouter>
       </TooltipProvider>
     </ModalProvider>
