@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Api } from "../../services/api";
 import Post from "../../components/Post";
@@ -8,6 +8,7 @@ import { TimeLineWrapper } from "../../components/TimeLineWrapper";
 import { PostsWrapper } from "../../components/PostsWrapper";
 import { Message } from "../../components/Message";
 import { UserImage } from "../../components/UserImage";
+import { AuthContext } from "../../contexts/auth";
 
 export default function UserPosts() {
   let { id } = useParams();
@@ -32,6 +33,8 @@ export default function UserPosts() {
     getPosts();
   }, [id]);
 
+  const {setClickedOn} = useContext(AuthContext);
+
   function CarregaPosts() {
     if (error) {
       return (
@@ -50,7 +53,7 @@ export default function UserPosts() {
   }
 
   return (
-    <TimeLineWrapper>
+    <TimeLineWrapper onClick={() => setClickedOn(false)}>
       <PageTitle>
         <UserImage src={user.pictureUrl} />
         {loading ? "" : <span>{user.username}'s posts</span>}

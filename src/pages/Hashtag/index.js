@@ -1,7 +1,7 @@
 import { cleanup } from "@testing-library/react";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useContext, useState } from "react";
+import axios from "axios";
 import { TailSpin } from "react-loader-spinner";
-import swal from "sweetalert";
 import { Message } from "../../components/Message";
 import PageTitle from "../../components/PageTitle";
 import Post from "../../components/Post";
@@ -9,62 +9,34 @@ import { PostsWrapper } from "../../components/PostsWrapper";
 import { Wrapper } from "../../components/Wrapper";
 import { TimeLineWrapper } from "../../components/TimeLineWrapper";
 import { TrendingWrapper, TrendingBar } from "../../components/TrendingWrapper";
-import HashtagList from "./components/HashtagList";
+import HashtagList from "../Timeline/components/HashtagList";
 import TopBar from "../../components/TopBar";
-import { Api } from "../../services/api";
-import PostWriter from "./components/PostWriter";
 import { AuthContext } from "../../contexts/auth";
 
-export default function Timeline() {
-  const [link, setLink] = useState("");
-  const [content, setContent] = useState("");
+export default function Hashtag() {
   const [loading, setLoading] = useState(true);
-  const [submiting, setSubmiting] = useState(false);
-  const [cleanup, setCleanup] = useState(false);
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(false);
 
+  const { user, hashtag } = useContext(AuthContext);
+
   useEffect(() => {
-    Api.get("/posts")
-      .then((r) => {
-        setPosts(r.data);
+    const request = axios.get(
+        `https://linkr-ipaw.onrender.com/hashtag/${hashtag.id}`,
+        { headers: { Authorization: `Bearer ${user.token}` } }
+    );
+    request.then(response => {
+        setPosts(response.data);
         setLoading(false);
-      })
-      .catch(() => {
+    });
+    request.catch(error => {
         setError(true);
         setLoading(false);
-      });
+        console.log(error.response.data);
+    });
+}, []);
 
-    if (cleanup === true) {
-      setCleanup(false);
-    }
-  }, [cleanup]);
-
-  const {setClickedOn} = useContext(AuthContext);
-
-  function onFinish(e) {
-    setSubmiting(true);
-    e.preventDefault();
-
-    const body = {
-      link,
-      content,
-    };
-
-    Api.post("/add-post", body)
-      .then(() => {
-        setLink("");
-        setContent("");
-        setSubmiting(false);
-        setCleanup(true);
-      })
-      .catch(() => {
-        swal("", "Ouve um erro ao publicar seu link", "error");
-        setSubmiting(false);
-      });
-  }
-
-  function CarregaPosts() {   
+  function CarregaPosts() {
     if (error) {
       return (
         <Message>
@@ -85,17 +57,9 @@ export default function Timeline() {
     <>
       <TimeLineWrapper>
         <TopBar />
-        <PageTitle>Timeline</PageTitle>
+        <PageTitle># {hashtag.name}</PageTitle>
         <Wrapper>
           <PostsWrapper>
-            <PostWriter
-              setLink={setLink}
-              link={link}
-              setContent={setContent}
-              content={content}
-              onFinish={onFinish}
-              loading={submiting}
-            />
             {loading ? (
               <TailSpin
                 height="40"

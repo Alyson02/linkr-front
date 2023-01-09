@@ -102,9 +102,9 @@ const Page = styled.div`
   justify-content: space-between;
   background: #333333;
 
-  @media (max-width: 750px) {
-    flex-direction: column;
-  }
+    @media(max-width: 937px) {
+        flex-direction: column;
+    }
 `;
 
 const LeftContainer = styled.div`

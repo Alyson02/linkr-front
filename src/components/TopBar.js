@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import { IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { UserImage } from "./UserImage";
 import { AiOutlineSearch } from "react-icons/ai";
 import { DebounceInput } from "react-debounce-input";
 import { Api } from "../services/api";
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useWindowDimensions from "./GetWindowDimensions";
 import { AuthContext } from "../contexts/auth";
 
@@ -32,12 +32,21 @@ function Result({ users, setUsers }) {
   );
 }
 
+function logout(setUser, navigate) {
+  setUser({});
+  localStorage.clear();
+  navigate('/');
+};
+
 export default function TopBar() {
   const [users, setUsers] = useState([]);
   let nameSearched = "";
   const window = useWindowDimensions();
+  const navigate = useNavigate();
 
   const auth = useContext(AuthContext);
+
+  const {setUser, clickedOn, setClickedOn} = useContext(AuthContext);
 
   async function search(value) {
     try {
@@ -49,7 +58,8 @@ export default function TopBar() {
   }
 
   return (
-    <TopBarContainer>
+    <>
+    <TopBarContainer onClick={() => setClickedOn(false)}>
       <div>
         <Link to="/timeline">linkr</Link>
         {window.width > 937 ? (
@@ -74,8 +84,12 @@ export default function TopBar() {
           ""
         )}
         <ProfileContainer>
-          <IoIosArrowDown color="white" size={25} />
-          <UserImage src={auth.user?.user?.pictureUrl} />
+          {clickedOn ? 
+            <IoIosArrowUp color="white" size={25} onClick={() => setClickedOn(false)}/>
+          :
+            <IoIosArrowDown color="white" size={25} onClick={() => setClickedOn(true)}/>
+          }
+          <UserImage src={auth.user?.user?.pictureUrl} onClick={() => setClickedOn(!clickedOn)}/>
         </ProfileContainer>
       </div>
       {window.width <= 937 ? (
@@ -100,6 +114,10 @@ export default function TopBar() {
         ""
       )}
     </TopBarContainer>
+    <LogoutButton clickedOn={clickedOn} onClick={() => logout(setUser, navigate)}>
+        <p>Logout</p>
+    </LogoutButton>
+    </>
   );
 }
 
@@ -231,5 +249,26 @@ const UserSearchContainer = styled.div`
 
   a {
     text-decoration: none;
+  }
+`;
+
+const LogoutButton = styled.div`
+  display: ${props => props.clickedOn ? "flex" : "none"};
+  position: fixed;
+  width: 150px;
+  height: 47px;
+  left: 1307px;
+  top: 72px;
+  background: #171717;
+  border-radius: 0px 0px 20px 20px;
+
+  p {
+    font-family: 'Lato', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 20px;
+    letter-spacing: 0.05em;
+    color: #FFFFFF;
   }
 `;
