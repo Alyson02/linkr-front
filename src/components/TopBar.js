@@ -32,21 +32,29 @@ function Result({ users, setUsers }) {
   );
 }
 
-function logout(setUser, navigate) {
-  setUser({});
-  localStorage.clear();
-  navigate('/');
-};
-
 export default function TopBar() {
   const [users, setUsers] = useState([]);
+  const [clickedOn, setClickedOn] = useState(false);
   let nameSearched = "";
   const window = useWindowDimensions();
   const navigate = useNavigate();
 
   const auth = useContext(AuthContext);
 
-  const {setUser, clickedOn, setClickedOn} = useContext(AuthContext);
+  const {setUser} = useContext(AuthContext);
+
+  function logout() {
+    setUser({});
+    localStorage.clear();
+    navigate('/');
+  };
+
+  function clickedOnIt () {
+    const click = !clickedOn;
+    setClickedOn(click);
+    console.log(click);
+    ;
+  }
 
   async function search(value) {
     try {
@@ -84,11 +92,13 @@ export default function TopBar() {
           ""
         )}
         <ProfileContainer>
-          {clickedOn ? 
-            <IoIosArrowUp color="white" size={25} onClick={() => setClickedOn(false)}/>
-          :
-            <IoIosArrowDown color="white" size={25} onClick={() => setClickedOn(true)}/>
-          }
+            <button onClick={() => clickedOnIt()}>
+              {clickedOn ? 
+                <IoIosArrowUp color="white" size={25}/>
+              :
+                <IoIosArrowDown color="white" size={25}/>
+              }
+            </button>            
           <UserImage src={auth.user?.user?.pictureUrl} onClick={() => setClickedOn(!clickedOn)}/>
         </ProfileContainer>
       </div>
@@ -114,7 +124,7 @@ export default function TopBar() {
         ""
       )}
     </TopBarContainer>
-    <LogoutButton clickedOn={clickedOn} onClick={() => logout(setUser, navigate)}>
+    <LogoutButton clickedOn={clickedOn} onClick={() => logout()}>
         <p>Logout</p>
     </LogoutButton>
     </>
@@ -196,6 +206,12 @@ const ProfileContainer = styled.div`
   justify-content: space-between;
   width: 85px;
   height: 72px;
+
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
 `;
 
 const ResultContainer = styled.div`
@@ -252,21 +268,25 @@ const UserSearchContainer = styled.div`
   }
 `;
 
-const LogoutButton = styled.div`
-  display: ${props => props.clickedOn ? "flex" : "none"};
+const LogoutButton = styled.button`
   position: fixed;
   width: 150px;
   height: 47px;
-  left: 1307px;
   top: 72px;
+  right: -17px;
+  display: ${props => props.clickedOn ? "flex" : "none"};
   background: #171717;
+  border: none;
+  text-align: center;
   border-radius: 0px 0px 20px 20px;
+  cursor: pointer;
 
   p {
     font-family: 'Lato', sans-serif;
     font-style: normal;
     font-weight: 700;
     font-size: 17px;
+    margin-right: 17px;
     line-height: 20px;
     letter-spacing: 0.05em;
     color: #FFFFFF;
