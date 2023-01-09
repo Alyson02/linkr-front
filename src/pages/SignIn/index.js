@@ -101,9 +101,9 @@ const Page = styled.div`
   justify-content: space-between;
   background: #333333;
 
-  @media (max-width: 750px) {
-    flex-direction: column;
-  }
+    @media(max-width: 937px) {
+        flex-direction: column;
+    }
 `;
 
 const LeftContainer = styled.div`
@@ -137,16 +137,16 @@ const LeftContainer = styled.div`
     color: #ffffff;
   }
 
-  @media (max-width: 750px) {
-    width: 100%;
-    height: 13.11844077961019%;
-    padding: 10px 69px 27px 69px;
-    align-items: center;
-
-    h1 {
-      font-size: 76px;
-      line-height: 84px;
-    }
+    @media(max-width: 937px) {
+        width: 100%;
+        height: 13.11844077961019%;
+        padding: 10px 69px 27px 69px;
+        align-items: center;
+        
+        h1 {
+            font-size: 76px;
+            line-height: 84px;
+        }
 
     p {
       font-size: 23px;
@@ -174,9 +174,9 @@ const RightContainer = styled.div`
     color: #ffffff;
   }
 
-  @media (max-width: 750px) {
-    height: 0;
-    padding: 40px 22px 0 23px;
+    @media(max-width: 937px) {
+        height: 0;
+        padding: 40px 22px 0 23px;
 
     p {
       margin-top: 21px;
@@ -230,19 +230,19 @@ const LoginForm = styled.form`
     align-items: center;
   }
 
-  @media (max-width: 750px) {
-    input {
-      height: 55px;
-      margin-bottom: 11px;
-      padding: 10px 17px 12px 17px;
-      font-size: 22px;
-      line-height: 33px;
+    @media(max-width: 937px) {
+        input {
+            height: 55px;
+            margin-bottom: 11px;
+            padding: 10px 17px 12px 17px;
+            font-size: 22px;
+            line-height: 33px;
+        }
+        button {
+            height: 55px;
+            padding: 11px 0;
+            font-size: 22px;
+            line-height: 33px;
+        }
     }
-    button {
-      height: 55px;
-      padding: 11px 0;
-      font-size: 22px;
-      line-height: 33px;
-    }
-  }
 `;

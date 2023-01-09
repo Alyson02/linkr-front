@@ -8,6 +8,7 @@ import GlobalStyle from "./components/GlobalStyle";
 import AuthProvider from "./contexts/auth";
 import SignIn from "./pages/SignIn";
 import TimeLine from "./pages/Timeline";
+import Hashtag from "./pages/Hashtag";
 import UserPosts from "./pages/UserPosts";
 import { TooltipProvider } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
@@ -43,6 +44,7 @@ export default function App() {
               <Route element={<WithNav />}>
                 <Route element={<TimeLine />} path="/timeline" />
                 <Route element={<UserPosts />} path="/user/:id" />
+                <Route element={<HashtagTimeline />} path="/hashtag/:hashtag" />
               </Route>
             </Routes>
           </Router>
