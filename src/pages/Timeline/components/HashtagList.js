@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import styled from 'styled-components';
 import { AuthContext } from "../../../contexts/auth";
+import { Api } from "../../../services/api";
 
 export default function HashtagList() {
     
@@ -13,21 +13,19 @@ export default function HashtagList() {
     const { user, setHashtag } = useContext(AuthContext);
 
     useEffect(() => {
-        const request = axios.get(
-            "https://linkr-ipaw.onrender.com/hashtag",
-            { headers: { Authorization: `Bearer ${user.token}` } }
-        );        
-        request.then(response => {
+        Api.get("/hashtag")
+        .then(response => {
             setHashtagList(response.data);
-        });
-        request.catch(error => {
+        })
+        .catch(error => {
             console.log(error.response.data);
         });
+        
     }, [user]);
 
     function redirectToHashtag(hashtag) {
         setHashtag(hashtag);
-        navigate(`/hashtag/${hashtag.name}`);
+        navigate(`/hashtag/${hashtag.name.substring(1)}`);
     }
 
     return (
@@ -35,7 +33,7 @@ export default function HashtagList() {
         <List>
             {hashtagList.map((hashtag, index) =>
                 <li key={index} onClick={() => redirectToHashtag(hashtag)}>
-                    # {hashtag.name}
+                    {hashtag.name}
                 </li>
             )}
         </List>
@@ -47,14 +45,20 @@ const List = styled.ul`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    padding-left: 16px;
 
     li {
+        margin-bottom: 23px;
         font-family: 'Lato', sans-serif;
         font-style: normal;
         font-weight: 700;
         font-size: 19px;
-        line-height: 23px;
         letter-spacing: 0.05em;
         color: #FFFFFF;
+        cursor: pointer;
+    }
+
+    @media (max-width: 937px) {
+        display: none;
     }
 `;
