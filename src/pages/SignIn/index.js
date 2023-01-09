@@ -110,12 +110,10 @@ const Page = styled.div`
 const LeftContainer = styled.div`
   width: 62.84722%;
   height: 100vh;
-  padding-top: 20.90277%;
-  padding-left: 10%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: center;
+  padding-left: 5%;
   background: #151515;
   box-shadow: 4px 0px 4px rgba(0, 0, 0, 0.25);
 
@@ -138,9 +136,9 @@ const LeftContainer = styled.div`
     color: #ffffff;
   }
 
-  @media (max-width: 750px) {
+  @media(max-width: 750px) {
     width: 100%;
-    height: 13.11844077961019%;
+    height: auto;
     padding: 10px 69px 27px 69px;
     align-items: center;
 
@@ -158,10 +156,10 @@ const LeftContainer = styled.div`
 
 const RightContainer = styled.div`
   height: 100vh;
-  padding: 22.01388% 3.81944% 30.55% 3.54166%;
+  padding: 0 3.81944%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 
   p {
@@ -175,8 +173,8 @@ const RightContainer = styled.div`
     color: #ffffff;
   }
 
-  @media (max-width: 750px) {
-    height: 0;
+  @media(max-width: 750px) {
+    height: auto;
     padding: 40px 22px 0 23px;
 
     p {
@@ -184,6 +182,7 @@ const RightContainer = styled.div`
       font-size: 17px;
       line-height: 20px;
     }
+    
   }
 `;
 
@@ -231,19 +230,19 @@ const LoginForm = styled.form`
     align-items: center;
   }
 
-  @media (max-width: 750px) {
-    input {
-      height: 55px;
-      margin-bottom: 11px;
-      padding: 10px 17px 12px 17px;
-      font-size: 22px;
-      line-height: 33px;
+    @media(max-width: 750px) {
+        input {
+            height: 55px;
+            margin-bottom: 11px;
+            padding: 10px 17px 12px 17px;
+            font-size: 22px;
+            line-height: 33px;
+        }
+        button {
+            height: 55px;
+            padding: 11px 0;
+            font-size: 22px;
+            line-height: 33px;
+        }
     }
-    button {
-      height: 55px;
-      padding: 11px 0;
-      font-size: 22px;
-      line-height: 33px;
-    }
-  }
 `;
