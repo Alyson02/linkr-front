@@ -16,11 +16,11 @@ export default function HashtagList() {
         Api.get("/hashtag")
         .then(response => {
             setHashtagList(response.data);
-            console.log(response.data);
         })
         .catch(error => {
             console.log(error.response.data);
         });
+        
         
     }, [user]);
 
@@ -34,6 +34,7 @@ export default function HashtagList() {
         <List>
             {hashtagList.map((hashtag, index) =>
                 <li key={index} onClick={() => redirectToHashtag(hashtag)}>
+                    {hashtag.name}
                     {hashtag.name}
                 </li>
             )}
@@ -56,6 +57,11 @@ const List = styled.ul`
         font-size: 19px;
         letter-spacing: 0.05em;
         color: #FFFFFF;
+        cursor: pointer;
+    }
+
+    @media (max-width: 937px) {
+        display: none;
         cursor: pointer;
     }
 
