@@ -41,19 +41,17 @@ export default function TopBar() {
 
   const auth = useContext(AuthContext);
 
-  const {setUser} = useContext(AuthContext);
+  const { setUser } = useContext(AuthContext);
 
   function logout() {
     setUser({});
     localStorage.clear();
-    navigate('/');
-  };
+    navigate("/");
+  }
 
-  function clickedOnIt () {
+  function clickedOnIt() {
     const click = !clickedOn;
     setClickedOn(click);
-    console.log(click);
-    ;
   }
 
   async function search(value) {
@@ -67,10 +65,45 @@ export default function TopBar() {
 
   return (
     <>
-    <TopBarContainer onClick={() => setClickedOn(false)}>
-      <div>
-        <Link to="/timeline">linkr</Link>
-        {window.width > 937 ? (
+      <TopBarContainer>
+        <div>
+          <Link to="/timeline">linkr</Link>
+          {window.width > 937 ? (
+            <InputContainer>
+              <DebounceInput
+                minLength={3}
+                debounceTimeout={300}
+                placeholder="Search for people"
+                onChange={(e) => {
+                  nameSearched = e.target.value;
+                  if (nameSearched.length > 0) {
+                    search(nameSearched);
+                  } else {
+                    setUsers([]);
+                  }
+                }}
+              />
+              <Result users={users} setUsers={setUsers} />
+              <AiOutlineSearch size={25} color="#C6C6C6" />
+            </InputContainer>
+          ) : (
+            ""
+          )}
+          <ProfileContainer>
+            <button onClick={() => clickedOnIt()}>
+              {clickedOn ? (
+                <IoIosArrowUp color="white" size={25} />
+              ) : (
+                <IoIosArrowDown color="white" size={25} />
+              )}
+            </button>
+            <UserImage
+              src={auth.user?.user?.pictureUrl}
+              onClick={() => setClickedOn(!clickedOn)}
+            />
+          </ProfileContainer>
+        </div>
+        {window.width <= 937 ? (
           <InputContainer>
             <DebounceInput
               minLength={3}
@@ -85,48 +118,16 @@ export default function TopBar() {
                 }
               }}
             />
-            <Result users={users} setUsers={setUsers} />
+            <Result users={users} />
             <AiOutlineSearch size={25} color="#C6C6C6" />
           </InputContainer>
         ) : (
           ""
         )}
-        <ProfileContainer>
-            <button onClick={() => clickedOnIt()}>
-              {clickedOn ? 
-                <IoIosArrowUp color="white" size={25}/>
-              :
-                <IoIosArrowDown color="white" size={25}/>
-              }
-            </button>            
-          <UserImage src={auth.user?.user?.pictureUrl} onClick={() => setClickedOn(!clickedOn)}/>
-        </ProfileContainer>
-      </div>
-      {window.width <= 937 ? (
-        <InputContainer>
-          <DebounceInput
-            minLength={3}
-            debounceTimeout={300}
-            placeholder="Search for people"
-            onChange={(e) => {
-              nameSearched = e.target.value;
-              if (nameSearched.length > 0) {
-                search(nameSearched);
-              } else {
-                setUsers([]);
-              }
-            }}
-          />
-          <Result users={users} />
-          <AiOutlineSearch size={25} color="#C6C6C6" />
-        </InputContainer>
-      ) : (
-        ""
-      )}
-    </TopBarContainer>
-    <LogoutButton clickedOn={clickedOn} onClick={() => logout()}>
+      </TopBarContainer>
+      <LogoutButton clickedOn={clickedOn} onClick={() => logout()}>
         <p>Logout</p>
-    </LogoutButton>
+      </LogoutButton>
     </>
   );
 }
@@ -211,6 +212,7 @@ const ProfileContainer = styled.div`
     background-color: transparent;
     border: none;
     cursor: pointer;
+    outline: none;
   }
 `;
 
@@ -274,7 +276,7 @@ const LogoutButton = styled.button`
   height: 47px;
   top: 72px;
   right: -17px;
-  display: ${props => props.clickedOn ? "flex" : "none"};
+  display: ${(props) => (props.clickedOn ? "absolute" : "none")};
   background: #171717;
   border: none;
   text-align: center;
@@ -282,13 +284,13 @@ const LogoutButton = styled.button`
   cursor: pointer;
 
   p {
-    font-family: 'Lato', sans-serif;
+    font-family: "Lato", sans-serif;
     font-style: normal;
     font-weight: 700;
     font-size: 17px;
     margin-right: 17px;
     line-height: 20px;
     letter-spacing: 0.05em;
-    color: #FFFFFF;
+    color: #ffffff;
   }
 `;
