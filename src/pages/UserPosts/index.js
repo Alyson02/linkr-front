@@ -4,7 +4,6 @@ import { Api } from "../../services/api";
 import Post from "../../components/Post";
 import { TailSpin } from "react-loader-spinner";
 import PageTitle from "../../components/PageTitle";
-import TopBar from "../../components/TopBar";
 import { TimeLineWrapper } from "../../components/TimeLineWrapper";
 import { PostsWrapper } from "../../components/PostsWrapper";
 import { Message } from "../../components/Message";

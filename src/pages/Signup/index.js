@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import styled from "styled-components";
 import { Api } from "../../services/api";
 import swal from "sweetalert";
@@ -35,7 +34,7 @@ export default function Singup() {
       .then(() => navigate("/"))
       .catch((err) => {
         console.log(err);
-        if (err.response.status == 409) {
+        if (err.response.status === 409) {
           swal("", "Email já está em uso", "error");
           setIsDisabled(false);
           return;

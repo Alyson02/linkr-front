@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import styled from "styled-components";
 import { AuthContext } from "../../contexts/auth";
+import { Api } from "../../services/api";
+import swal from "sweetalert";
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -14,17 +15,12 @@ export default function SignIn() {
 
   const { setUser } = useContext(AuthContext);
 
-  const user = {
-    email: email,
-    password: password,
-  };
-
   useEffect(() => {
     const loggedInUser = localStorage.getItem("user");
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser);
       setUser(foundUser);
-      navigate(`/timeline`);
+      navigate('/timeline');
     }
   }, []);
 
@@ -37,10 +33,10 @@ export default function SignIn() {
 
   function loginFail(error) {
     if (error.response.status === 422) {
-      alert("ERROR: Please fill in all the fields!");
+      swal("ERROR: Please fill in all the fields!");
     }
     if (error.response.status === 401) {
-      alert("ERROR: Email or password incorrect! Please try again!");
+      swal("ERROR: Email or password incorrect! Please try again!");
     }
     setIsDisabled(false);
   }
@@ -48,9 +44,14 @@ export default function SignIn() {
   function loginUser(event) {
     event.preventDefault();
     setIsDisabled(true);
-    const request = axios.post("https://linkr-ipaw.onrender.com/signin", user);
-    request.then((r) => loginSuccess(r.data));
-    request.catch((error) => loginFail(error));
+    Api.post("/signin",
+      {
+        email: email,
+        password: password,
+      }
+    )
+    .then((r) => loginSuccess(r.data))
+    .catch((error) => loginFail(error));
   }
 
   return (
