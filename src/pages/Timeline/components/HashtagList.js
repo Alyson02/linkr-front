@@ -35,7 +35,6 @@ export default function HashtagList() {
             {hashtagList.map((hashtag, index) =>
                 <li key={index} onClick={() => redirectToHashtag(hashtag)}>
                     {hashtag.name}
-                    {hashtag.name}
                 </li>
             )}
         </List>
