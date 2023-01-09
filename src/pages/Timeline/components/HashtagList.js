@@ -2,13 +2,13 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styled from 'styled-components';
-import { AuthContext } from "../../contexts/auth";
+import { AuthContext } from "../../../contexts/auth";
 
 export default function HashtagList() {
     
     const navigate = useNavigate();
 
-    const [hashtagList, setHashtagList] = useState({});
+    const [hashtagList, setHashtagList] = useState([]);
 
     const { user, setHashtag } = useContext(AuthContext);
 

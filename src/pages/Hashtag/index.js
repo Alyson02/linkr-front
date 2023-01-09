@@ -9,7 +9,7 @@ import { PostsWrapper } from "../../components/PostsWrapper";
 import { Wrapper } from "../../components/Wrapper";
 import { TimeLineWrapper } from "../../components/TimeLineWrapper";
 import { TrendingWrapper, TrendingBar } from "../../components/TrendingWrapper";
-import HashtagList from "./components/HashtagList";
+import HashtagList from "../Timeline/components/HashtagList";
 import TopBar from "../../components/TopBar";
 import { AuthContext } from "../../contexts/auth";
 
