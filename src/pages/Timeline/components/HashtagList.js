@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import { AuthContext } from "../../../contexts/auth";
 import { Api } from "../../../services/api";
+import { Api } from "../../../services/api";
 
 export default function HashtagList() {
     
@@ -15,16 +16,20 @@ export default function HashtagList() {
     useEffect(() => {
         Api.get("/hashtag")
         .then(response => {
+        Api.get("/hashtag")
+        .then(response => {
             setHashtagList(response.data);
         })
         .catch(error => {
             console.log(error.response.data);
         });
         
+        
     }, [user]);
 
     function redirectToHashtag(hashtag) {
         setHashtag(hashtag);
+        navigate(`/hashtag/${hashtag.name.substring(1)}`);
         navigate(`/hashtag/${hashtag.name.substring(1)}`);
     }
 
@@ -33,6 +38,7 @@ export default function HashtagList() {
         <List>
             {hashtagList.map((hashtag, index) =>
                 <li key={index} onClick={() => redirectToHashtag(hashtag)}>
+                    {hashtag.name}
                     {hashtag.name}
                 </li>
             )}
@@ -46,8 +52,10 @@ const List = styled.ul`
     flex-direction: column;
     justify-content: flex-start;
     padding-left: 16px;
+    padding-left: 16px;
 
     li {
+        margin-bottom: 23px;
         margin-bottom: 23px;
         font-family: 'Lato', sans-serif;
         font-style: normal;
@@ -55,6 +63,11 @@ const List = styled.ul`
         font-size: 19px;
         letter-spacing: 0.05em;
         color: #FFFFFF;
+        cursor: pointer;
+    }
+
+    @media (max-width: 937px) {
+        display: none;
         cursor: pointer;
     }
 

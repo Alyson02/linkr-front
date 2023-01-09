@@ -1,6 +1,5 @@
 import { cleanup } from "@testing-library/react";
 import { useEffect, useContext, useState } from "react";
-import axios from "axios";
 import { TailSpin } from "react-loader-spinner";
 import { Message } from "../../components/Message";
 import PageTitle from "../../components/PageTitle";
@@ -12,24 +11,22 @@ import { TrendingWrapper, TrendingBar } from "../../components/TrendingWrapper";
 import HashtagList from "../Timeline/components/HashtagList";
 import TopBar from "../../components/TopBar";
 import { AuthContext } from "../../contexts/auth";
+import { Api } from "../../services/api";
 
 export default function Hashtag() {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(false);
 
-  const { user, hashtag } = useContext(AuthContext);
+  const { hashtag } = useContext(AuthContext);
 
   useEffect(() => {
-    const request = axios.get(
-        `https://linkr-ipaw.onrender.com/hashtag/${hashtag.id}`,
-        { headers: { Authorization: `Bearer ${user.token}` } }
-    );
-    request.then(response => {
+    Api.get("/hashtag" + hashtag.name)
+    .then(response => {
         setPosts(response.data);
         setLoading(false);
-    });
-    request.catch(error => {
+    })
+    .catch(error => {
         setError(true);
         setLoading(false);
         console.log(error.response.data);
