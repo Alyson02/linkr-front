@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import { AuthContext } from "../../../contexts/auth";
 import { Api } from "../../../services/api";
-import { Api } from "../../../services/api";
 
 export default function HashtagList() {
     
@@ -14,8 +13,6 @@ export default function HashtagList() {
     const { user, setHashtag } = useContext(AuthContext);
 
     useEffect(() => {
-        Api.get("/hashtag")
-        .then(response => {
         Api.get("/hashtag")
         .then(response => {
             setHashtagList(response.data);
@@ -29,7 +26,6 @@ export default function HashtagList() {
 
     function redirectToHashtag(hashtag) {
         setHashtag(hashtag);
-        navigate(`/hashtag/${hashtag.name.substring(1)}`);
         navigate(`/hashtag/${hashtag.name.substring(1)}`);
     }
 
@@ -52,10 +48,8 @@ const List = styled.ul`
     flex-direction: column;
     justify-content: flex-start;
     padding-left: 16px;
-    padding-left: 16px;
 
     li {
-        margin-bottom: 23px;
         margin-bottom: 23px;
         font-family: 'Lato', sans-serif;
         font-style: normal;
