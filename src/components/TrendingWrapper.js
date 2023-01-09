@@ -18,6 +18,10 @@ export const TrendingWrapper = styled.div`
         line-height: 40px;
         color: #FFFFFF;
     }
+
+    @media (max-width: 937px) {
+        display: none;
+    }
 `;
 
 export const TrendingBar = styled.div`
@@ -25,4 +29,8 @@ export const TrendingBar = styled.div`
     height: 0px;
     margin-bottom: 22px;
     border: 1px solid #484848;
+
+    @media (max-width: 937px) {
+        display: none;
+    }
 `;
