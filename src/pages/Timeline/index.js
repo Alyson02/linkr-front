@@ -1,5 +1,5 @@
 import { cleanup } from "@testing-library/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TailSpin } from "react-loader-spinner";
 import swal from "sweetalert";
 import { Message } from "../../components/Message";
@@ -13,6 +13,7 @@ import HashtagList from "./components/HashtagList";
 import TopBar from "../../components/TopBar";
 import { Api } from "../../services/api";
 import PostWriter from "./components/PostWriter";
+import { AuthContext } from "../../contexts/auth";
 
 export default function Timeline() {
   const [link, setLink] = useState("");
@@ -39,6 +40,8 @@ export default function Timeline() {
     }
   }, [cleanup]);
 
+  const {setClickedOn} = useContext(AuthContext);
+
   function onFinish(e) {
     setSubmiting(true);
     e.preventDefault();
@@ -61,7 +64,7 @@ export default function Timeline() {
       });
   }
 
-  function CarregaPosts() {
+  function CarregaPosts() {   
     if (error) {
       return (
         <Message>

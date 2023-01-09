@@ -1,6 +1,8 @@
+import { useContext } from "react";
 import styled from "styled-components";
 import useWindowDimensions from "../../../components/GetWindowDimensions";
 import { UserImage } from "../../../components/UserImage";
+import { AuthContext } from "../../../contexts/auth";
 
 export default function PostWriter({
   setLink,
@@ -11,12 +13,11 @@ export default function PostWriter({
   loading,
 }) {
   const { width } = useWindowDimensions();
+  const auth = useContext(AuthContext);
 
   return (
     <PostWriterWrapper>
-      {width > 937 && (
-        <UserImage src="https://pop.proddigital.com.br/wp-content/uploads/sites/8/2022/10/2f24e280b7c0c94000d91133fe1552cc1665499260-main.png" />
-      )}
+      {width > 937 && <UserImage src={auth.user?.user?.pictureUrl} />}
       <PostForm onSubmit={onFinish}>
         <PostWriterTitle>What are you going to share today?</PostWriterTitle>
         <InputLink
