@@ -178,7 +178,7 @@ export default function Post({ post, id }) {
           : 
           <ReactTagify 
             colors={"white"} 
-            tagClicked={(tag)=> navigate('/hashtags/'+tag.replace('#',''))}
+            tagClicked={(tag)=> navigate('/hashtag/'+tag.replace('#',''))}
           >
              <PostContent>{textPost}</PostContent>
           </ReactTagify>
