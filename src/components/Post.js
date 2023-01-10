@@ -29,7 +29,7 @@ export default function Post({ post, id }) {
   const inputRef = useRef(null);
   const [textPost,setTextPost] = useState(post.content);
   let subtitle;
-  const foundUser = JSON.parse(localStorage.getItem("user"));
+  const foundUser = JSON.parse(localStorage.getItem("user")).user;
 
   useEffect(() => {
     if (edit) {
