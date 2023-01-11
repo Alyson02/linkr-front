@@ -1,4 +1,3 @@
-import { cleanup } from "@testing-library/react";
 import { useEffect, useState } from "react";
 import { TailSpin } from "react-loader-spinner";
 import swal from "sweetalert";

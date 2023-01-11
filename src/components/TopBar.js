@@ -14,7 +14,7 @@ function UserSearch({ user, setUsers }) {
     <UserSearchContainer>
       <Link to={`/user/${user.id}`}>
         <div onClick={() => setUsers([])}>
-          <img src={user.pictureUrl} />
+          <img src={user.pictureUrl} alt="user"/>
           <span>{user.username}</span>
         </div>
       </Link>
