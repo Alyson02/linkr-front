@@ -9,6 +9,9 @@ import { PostsWrapper } from "../../components/PostsWrapper";
 import { Message } from "../../components/Message";
 import { UserImage } from "../../components/UserImage";
 import { AuthContext } from "../../contexts/auth";
+import { TrendingBar, TrendingWrapper } from "../../components/TrendingWrapper";
+import HashtagList from "../Timeline/components/HashtagList";
+import { Wrapper } from "../../components/Wrapper";
 
 export default function UserPosts() {
   let { id } = useParams();
@@ -33,7 +36,7 @@ export default function UserPosts() {
     getPosts();
   }, [id]);
 
-  const {setClickedOn} = useContext(AuthContext);
+  const { setClickedOn } = useContext(AuthContext);
 
   function CarregaPosts() {
     if (error) {
@@ -55,24 +58,36 @@ export default function UserPosts() {
   return (
     <TimeLineWrapper onClick={() => setClickedOn(false)}>
       <PageTitle>
-        <UserImage src={user.pictureUrl} />
-        {loading ? "" : <span>{user.username}'s posts</span>}
+        <div>
+          <UserImage src={user.pictureUrl} />
+          {loading ? "" : <span>{user.username}'s posts</span>}
+        </div>
+        <div>
+
+        </div>
       </PageTitle>
-      <PostsWrapper>
-        {loading ? (
-          <TailSpin
-            height="40"
-            width="100%"
-            color="#1877f2"
-            ariaLabel="tail-spin-loading"
-            radius="1"
-            visible={true}
-            wrapperStyle={{ marginTop: "40px" }}
-          />
-        ) : (
-          <CarregaPosts />
-        )}
-      </PostsWrapper>
+      <Wrapper>
+        <PostsWrapper>
+          {loading ? (
+            <TailSpin
+              height="40"
+              width="100%"
+              color="#1877f2"
+              ariaLabel="tail-spin-loading"
+              radius="1"
+              visible={true}
+              wrapperStyle={{ marginTop: "40px" }}
+            />
+          ) : (
+            <CarregaPosts />
+          )}
+        </PostsWrapper>
+        <TrendingWrapper>
+          <h1>trending</h1>
+          <TrendingBar></TrendingBar>
+          <HashtagList />
+        </TrendingWrapper>
+      </Wrapper>
     </TimeLineWrapper>
   );
 }
