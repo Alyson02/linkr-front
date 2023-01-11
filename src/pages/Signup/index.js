@@ -33,7 +33,6 @@ export default function Singup() {
     Api.post("/signup", obj)
       .then(() => navigate("/"))
       .catch((err) => {
-        console.log(err);
         if (err.response.status === 409) {
           swal("", "Email já está em uso", "error");
           setIsDisabled(false);

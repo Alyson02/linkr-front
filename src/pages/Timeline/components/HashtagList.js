@@ -18,7 +18,6 @@ export default function HashtagList() {
             setHashtagList(response.data);
         })
         .catch(error => {
-            console.log(error.response.data);
         });
         
         

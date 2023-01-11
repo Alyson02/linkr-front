@@ -1,7 +1,5 @@
-import { cleanup } from "@testing-library/react";
 import { useEffect, useState } from "react";
 import { TailSpin } from "react-loader-spinner";
-import swal from "sweetalert";
 import { Message } from "../../components/Message";
 import PageTitle from "../../components/PageTitle";
 import Post from "../../components/Post";
@@ -15,16 +13,14 @@ import { Api } from "../../services/api";
 import PostWriter from "./components/PostWriter";
 
 export default function Timeline() {
-  const [link, setLink] = useState("");
-  const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
-  const [submiting, setSubmiting] = useState(false);
   const [cleanup, setCleanup] = useState(false);
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(false);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    Api.get("/posts")
+    Api.get(`/posts?page=${page}&limit=10`)
       .then((r) => {
         setPosts(r.data);
         setLoading(false);
@@ -39,29 +35,7 @@ export default function Timeline() {
     }
   }, [cleanup]);
 
-  function onFinish(e) {
-    setSubmiting(true);
-    e.preventDefault();
-
-    const body = {
-      link,
-      content,
-    };
-
-    Api.post("/add-post", body)
-      .then(() => {
-        setLink("");
-        setContent("");
-        setSubmiting(false);
-        setCleanup(true);
-      })
-      .catch(() => {
-        swal("", "Ouve um erro ao publicar seu link", "error");
-        setSubmiting(false);
-      });
-  }
-
-  function CarregaPosts() {   
+  function CarregaPosts() {
     if (error) {
       return (
         <Message>
@@ -85,14 +59,7 @@ export default function Timeline() {
         <PageTitle>Timeline</PageTitle>
         <Wrapper>
           <PostsWrapper>
-            <PostWriter
-              setLink={setLink}
-              link={link}
-              setContent={setContent}
-              content={content}
-              onFinish={onFinish}
-              loading={submiting}
-            />
+            <PostWriter setCleanup={setCleanup} />
             {loading ? (
               <TailSpin
                 height="40"

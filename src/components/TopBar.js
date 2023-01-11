@@ -59,7 +59,6 @@ export default function TopBar() {
       const res = (await Api.get(`/user/search/${value}`)).data;
       setUsers(res);
     } catch (err) {
-      console.log(err);
     }
   }
 

@@ -7,9 +7,7 @@ export const ProtectedLayout = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Protected", auth.user);
     if (auth.user === undefined || auth.user === null) {
-      console.log(auth.user);
       navigate("/");
     }
   }, [auth.token]);
