@@ -25,7 +25,6 @@ export default function SignIn() {
   }, []);
 
   function loginSuccess(data) {
-    console.log(data);
     setUser(data);
     localStorage.setItem("user", JSON.stringify(data));
     navigate(`/timeline`);

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { TailSpin } from "react-loader-spinner";
-import swal from "sweetalert";
 import { Message } from "../../components/Message";
 import PageTitle from "../../components/PageTitle";
 import Post from "../../components/Post";
@@ -12,21 +11,25 @@ import HashtagList from "./components/HashtagList";
 import TopBar from "../../components/TopBar";
 import { Api } from "../../services/api";
 import PostWriter from "./components/PostWriter";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { Loader } from "../../components/Loader";
+import { EndMessage } from "../../components/EndMessage";
 
 export default function Timeline() {
-  const [link, setLink] = useState("");
-  const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
-  const [submiting, setSubmiting] = useState(false);
   const [cleanup, setCleanup] = useState(false);
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(false);
+  const [page, setPage] = useState(1);
+  const [noMore, setNoMore] = useState(true);
 
   useEffect(() => {
-    Api.get("/posts")
+    setLoading(true);
+    Api.get(`/posts?page=${page}&limit=10`)
       .then((r) => {
         setPosts(r.data);
         setLoading(false);
+        setPage(page + 1);
       })
       .catch(() => {
         setError(true);
@@ -38,29 +41,7 @@ export default function Timeline() {
     }
   }, [cleanup]);
 
-  function onFinish(e) {
-    setSubmiting(true);
-    e.preventDefault();
-
-    const body = {
-      link,
-      content,
-    };
-
-    Api.post("/add-post", body)
-      .then(() => {
-        setLink("");
-        setContent("");
-        setSubmiting(false);
-        setCleanup(true);
-      })
-      .catch(() => {
-        swal("", "Ouve um erro ao publicar seu link", "error");
-        setSubmiting(false);
-      });
-  }
-
-  function CarregaPosts() {   
+  function CarregaPosts() {
     if (error) {
       return (
         <Message>
@@ -77,6 +58,20 @@ export default function Timeline() {
     return posts.map((p) => <Post post={p} key={p.id} />);
   }
 
+  async function getPosts() {
+    const res = await Api.get(`/posts?page=${page}&limit=10`);
+    console.log(res);
+    return res.data;
+  }
+
+  async function fetchData() {
+    const postsServer = await getPosts();
+    setPosts([...posts, ...postsServer]);
+
+    if (postsServer.length === 0 || postsServer.length < 10) setNoMore(false);
+    setPage(page + 1);
+  }
+
   return (
     <>
       <TimeLineWrapper>
@@ -85,29 +80,18 @@ export default function Timeline() {
           <div>timeline</div>
         </PageTitle>
         <Wrapper>
-          <PostsWrapper>
-            <PostWriter
-              setLink={setLink}
-              link={link}
-              setContent={setContent}
-              content={content}
-              onFinish={onFinish}
-              loading={submiting}
-            />
-            {loading ? (
-              <TailSpin
-                height="40"
-                width="100%"
-                color="#1877f2"
-                ariaLabel="tail-spin-loading"
-                radius="1"
-                visible={true}
-                wrapperStyle={{ marginTop: "40px" }}
-              />
-            ) : (
+          <InfiniteScroll
+            dataLength={posts.length}
+            next={fetchData}
+            hasMore={noMore}
+            loader={<Loader />}
+            endMessage={<EndMessage>Yay! You have seen it all</EndMessage>}
+          >
+            <PostsWrapper>
+              <PostWriter setCleanup={setCleanup} />
               <CarregaPosts />
-            )}
-          </PostsWrapper>
+            </PostsWrapper>
+          </InfiniteScroll>
           <TrendingWrapper>
             <h1>trending</h1>
             <TrendingBar></TrendingBar>
