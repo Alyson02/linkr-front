@@ -142,6 +142,7 @@ const TopBarContainer = styled.div`
   height: 72px;
   width: 100%;
   padding: 0 20px;
+  z-index: 30;
 
   @media (max-width: 937px) {
     height: 144px;

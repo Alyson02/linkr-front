@@ -296,15 +296,15 @@ const InputContainer = styled.form`
     width: inherit;
     background-color: #252525;
     border-radius: 8px;
+    padding: 0 0.7vw;
 
     input {
       display: flex;
       align-items: center;
-      width: calc(100% - 30px);
+      width: calc(100% - 20px);
       height: 45px;
       border-radius: 8px;
       border: none;
-      padding: 0 0.7vw;
       font-size: 14px;
       color: #c6c6c6;
       font-family: "Lato";
