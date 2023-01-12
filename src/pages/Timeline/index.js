@@ -14,6 +14,9 @@ import PostWriter from "./components/PostWriter";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Loader } from "../../components/Loader";
 import { EndMessage } from "../../components/EndMessage";
+import { AiOutlineReload } from "react-icons/ai";
+import styled from "styled-components";
+import useInterval from 'use-interval'
 
 export default function Timeline() {
   const [loading, setLoading] = useState(true);
@@ -22,6 +25,21 @@ export default function Timeline() {
   const [error, setError] = useState(false);
   const [page, setPage] = useState(1);
   const [noMore, setNoMore] = useState(true);
+  const [numPosts, setNumPosts] = useState(-1);
+  const [oldNumPosts, setOldNumPosts] = useState(-1);
+
+  useInterval(
+    () => {
+      Api.get(`/posts/count`)
+      .then((r) => {
+        if(oldNumPosts === -1){
+          setOldNumPosts(r.data.numPosts);
+        }
+        setNumPosts(r.data.numPosts)
+      })
+    },
+    2000
+  )
 
   useEffect(() => {
     setLoading(true);
@@ -55,7 +73,13 @@ export default function Timeline() {
       return <Message>There are no posts yet</Message>;
     }
 
-    return posts.map((p) => <Post post={p} key={p.id} />);
+    return (
+      <>
+        { numPosts > oldNumPosts ? <NewPosts onClick={()=>{cleanup(true)}}>{numPosts - oldNumPosts}<p>new posts, load more!</p><AiOutlineReload size={20}/></NewPosts> : ''}
+        
+        {posts.map((p) => <Post post={p} key={p.id} />)}
+      </>
+    );
   }
 
   async function getPosts() {
@@ -102,3 +126,24 @@ export default function Timeline() {
     </>
   );
 }
+
+const NewPosts = styled.button`
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  background: #1877F2;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
+  height: 60px;
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  border:none;
+  p{
+    margin: 0 5px;
+    color: #FFFFFF;
+  }
+  color: #FFFFFF;
+`
