@@ -38,6 +38,15 @@ export default function Post({ post, id }) {
   const [textPost, setTextPost] = useState(post.content);
   let subtitle;
   const foundUser = JSON.parse(localStorage.getItem("user")).user;
+  const [comment, setComment] = useState('')
+
+  const auth = useContext(AuthContext);
+
+  const config = {
+    headers: {
+      'Authorization': `Bearer ${auth.token}`
+    }
+  }
 
   const auth = useContext(AuthContext);
 
