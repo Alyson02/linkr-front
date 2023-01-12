@@ -323,7 +323,6 @@ const PostWrapper = styled.div`
   border-radius: 16px;
   width: 100%;
   overflow: hidden;
-  flex-direction: column;
   gap: 20px;
 
   @media (max-width: 937px) {
