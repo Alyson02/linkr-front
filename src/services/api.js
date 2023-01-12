@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const Api = axios.create({
-  baseURL: process.env.MODE === "PROD" ? "https://linkr-ipaw.onrender.com" : "http://localhost:4000",
+  baseURL: process.env.REACT_APP_MODE === "PROD" ? "https://linkr-ipaw.onrender.com" : "http://localhost:4000",
 });
 
 
