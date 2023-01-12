@@ -592,9 +592,13 @@ const CommentForm = styled.form`
 
   button {
     margin-left: -39px;
+    padding-right: 16px;
     width: 39px;
     height: 39px;
     background-color: #252525;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: none;
     border-radius: 8px;
   }
