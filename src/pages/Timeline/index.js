@@ -22,12 +22,14 @@ export default function Timeline() {
   const [error, setError] = useState(false);
   const [page, setPage] = useState(1);
   const [noMore, setNoMore] = useState(true);
-
+  const [following, setFollowing] = useState('');
+  
   useEffect(() => {
     setLoading(true);
     Api.get(`/posts?page=${page}&limit=10`)
       .then((r) => {
-        setPosts(r.data);
+        setFollowing(r.data.following)
+        setPosts(r.data.posts);
         setLoading(false);
         setPage(page + 1);
       })
@@ -51,8 +53,11 @@ export default function Timeline() {
       );
     }
 
-    if (posts.length === 0) {
-      return <Message>There are no posts yet</Message>;
+    if(posts.length === 0 && following === '' && loading===false){
+      return <Message>You don't follow anyone yet. Search for new friends!</Message>;
+    }
+    else if (posts.length === 0 && following !== '' && loading===false){
+      return <Message>No posts found from your friends</Message>;
     }
 
     return posts.map((p) => <Post post={p} key={p.id} />);
