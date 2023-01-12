@@ -9,6 +9,10 @@ import { PostsWrapper } from "../../components/PostsWrapper";
 import { Message } from "../../components/Message";
 import { UserImage } from "../../components/UserImage";
 import { AuthContext } from "../../contexts/auth";
+import { Wrapper } from "../../components/Wrapper";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { Loader } from "../../components/Loader";
+import { EndMessage } from "../../components/EndMessage";
 
 export default function UserPosts() {
   let { id } = useParams();
@@ -16,14 +20,17 @@ export default function UserPosts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [user, setUser] = useState([]);
+  const [page, setPage] = useState(1);
+  const [noMore, setNoMore] = useState(true);
 
   useEffect(() => {
     const getPosts = async () => {
       try {
-        const res = (await Api.get(`/user/${id}`)).data;
+        const res = (await Api.get(`/user/${id}?page=${page}&limit=10`)).data;
         setPosts(res.posts);
         setUser(res.user);
         setLoading(false);
+        setPage(page + 1);
       } catch (err) {
         setError(true);
         setLoading(false);
@@ -33,7 +40,7 @@ export default function UserPosts() {
     getPosts();
   }, [id]);
 
-  const {setClickedOn} = useContext(AuthContext);
+  const { setClickedOn } = useContext(AuthContext);
 
   function CarregaPosts() {
     if (error) {
@@ -52,27 +59,38 @@ export default function UserPosts() {
     return posts.map((p) => <Post id={id} post={p} key={p.id} />);
   }
 
+  async function getPosts() {
+    const res = await Api.get(`/user/${id}?page=${page}&limit=10`);
+    return res.data.posts;
+  }
+
+  async function fetchData() {
+    const postsServer = await getPosts();
+    setPosts([...posts, ...postsServer]);
+
+    if (postsServer.length === 0 || postsServer.length < 10) setNoMore(false);
+    setPage(page + 1);
+  }
+
   return (
     <TimeLineWrapper onClick={() => setClickedOn(false)}>
       <PageTitle>
         <UserImage src={user.pictureUrl} />
         {loading ? "" : <span>{user.username}'s posts</span>}
       </PageTitle>
-      <PostsWrapper>
-        {loading ? (
-          <TailSpin
-            height="40"
-            width="100%"
-            color="#1877f2"
-            ariaLabel="tail-spin-loading"
-            radius="1"
-            visible={true}
-            wrapperStyle={{ marginTop: "40px" }}
-          />
-        ) : (
-          <CarregaPosts />
-        )}
-      </PostsWrapper>
+      <Wrapper>
+        <InfiniteScroll
+          dataLength={posts.length}
+          next={fetchData}
+          hasMore={noMore}
+          loader={<Loader />}
+          endMessage={<EndMessage>Yay! You have seen it all</EndMessage>}
+        >
+          <PostsWrapper>
+            <CarregaPosts />
+          </PostsWrapper>
+        </InfiniteScroll>
+      </Wrapper>
     </TimeLineWrapper>
   );
 }
