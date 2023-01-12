@@ -9,7 +9,9 @@ const PageTitle = styled.h1`
   font-size: 43px;
   line-height: 64px;
   color: #ffffff;
+  justify-content: space-between;
   box-sizing: border-box;
+
   @media (max-width:  937px) {
     margin-left: 17px;
   }
@@ -20,9 +22,20 @@ const PageTitle = styled.h1`
     gap: 20px;
   }
 
-  /* div:nth-child(2) {
-    width: 
-  } */
+  div:nth-child(2) {
+    display: flex;
+    width: 112px;
+    height: 31px;
+    border-radius: 5px;
+    background-color: ${props => props.follow ? '#FFFFFF' : '#1877F2'};
+    color: ${props => props.follow ? '#1877F2' : '#FFFFFF'};
+    font-family: 'Lato';
+    font-size: 14px;
+    font-weight: 700;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
 `;
 
 export default PageTitle;

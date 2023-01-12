@@ -83,7 +83,6 @@ export default function Timeline() {
         <TopBar />
         <PageTitle>
           <div>timeline</div>
-          <div></div>
         </PageTitle>
         <Wrapper>
           <PostsWrapper>

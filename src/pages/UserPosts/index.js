@@ -19,6 +19,16 @@ export default function UserPosts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [user, setUser] = useState([]);
+  const [follow, setFollow] = useState(false)
+  const loggedUser = JSON.parse(localStorage.getItem("user")).user
+
+  const auth = useContext(AuthContext);
+
+  const config = {
+    headers: {
+      'Authorization': `Bearer ${auth.user.token}`
+    }
+  }
 
   useEffect(() => {
     const getPosts = async () => {
@@ -33,7 +43,21 @@ export default function UserPosts() {
       }
     };
 
+    const getFollow = async () => {
+      try {
+
+        const res = (await Api.get(`/user/follow/${id}`, {}, config)).data.follow
+
+        setFollow(res)
+
+      } catch (err) {
+        setError(true)
+        setLoading(false)
+      }
+    }
+
     getPosts();
+    getFollow()
   }, [id]);
 
   const { setClickedOn } = useContext(AuthContext);
@@ -55,16 +79,33 @@ export default function UserPosts() {
     return posts.map((p) => <Post id={id} post={p} key={p.id} />);
   }
 
+  async function followUser() {
+
+    try {
+
+      await Api.post(`/user/follow/${id}`, {}, config)
+
+      setFollow(!follow)
+
+    } catch (err) {
+      setError(true)
+      setLoading(false)
+    }
+
+  }
+
   return (
     <TimeLineWrapper onClick={() => setClickedOn(false)}>
-      <PageTitle>
+      <PageTitle follow={follow}>
         <div>
           <UserImage src={user.pictureUrl} />
           {loading ? "" : <span>{user.username}'s posts</span>}
         </div>
-        <div>
-
-        </div>
+        {Number(id) !== Number(loggedUser.id) ? (
+          <div onClick={followUser}>
+            {follow ? <span>Unfollow</span> : <span>Follow</span>}
+          </div>
+        ) : ''}
       </PageTitle>
       <Wrapper>
         <PostsWrapper>
