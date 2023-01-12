@@ -20,6 +20,7 @@ export default function UserPosts() {
   const [error, setError] = useState(false);
   const [user, setUser] = useState([]);
   const [follow, setFollow] = useState(false)
+  const [disabled, setDisabled] = useState(true)
   const loggedUser = JSON.parse(localStorage.getItem("user")).user
 
   const auth = useContext(AuthContext);
@@ -47,6 +48,8 @@ export default function UserPosts() {
       try {
 
         const res = (await Api.get(`/user/follow/${id}`, {}, config)).data.follow
+        
+        setDisabled(false)
 
         setFollow(res)
 
@@ -96,15 +99,15 @@ export default function UserPosts() {
 
   return (
     <TimeLineWrapper onClick={() => setClickedOn(false)}>
-      <PageTitle follow={follow}>
+      <PageTitle follow={follow} disabled={disabled}>
         <div>
           <UserImage src={user.pictureUrl} />
           {loading ? "" : <span>{user.username}'s posts</span>}
         </div>
         {Number(id) !== Number(loggedUser.id) ? (
-          <div onClick={followUser}>
+          <button onClick={followUser} disabled={disabled}>
             {follow ? <span>Unfollow</span> : <span>Follow</span>}
-          </div>
+          </button>
         ) : ''}
       </PageTitle>
       <Wrapper>

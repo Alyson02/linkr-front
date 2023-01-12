@@ -22,7 +22,7 @@ const PageTitle = styled.h1`
     gap: 20px;
   }
 
-  div:nth-child(2) {
+  button {
     display: flex;
     width: 112px;
     height: 31px;
@@ -34,7 +34,9 @@ const PageTitle = styled.h1`
     font-weight: 700;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
+    border: none;
+    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+    opacity: ${props => props.disabled ? 0.5 : 1}
   }
 `;
 
