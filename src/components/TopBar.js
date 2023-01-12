@@ -16,6 +16,7 @@ function UserSearch({ user, setUsers }) {
         <div onClick={() => setUsers([])}>
           <img src={user.pictureUrl} alt="user"/>
           <span>{user.username}</span>
+          {user.following ? <span>• following</span> : ''}
         </div>
       </Link>
     </UserSearchContainer>
@@ -264,6 +265,10 @@ const UserSearchContainer = styled.div`
     font-weight: 400;
     font-family: "Lato";
     color: #515151;
+  }
+
+  span:nth-child(3) {
+    color: #C5C5C5;
   }
 
   a {
