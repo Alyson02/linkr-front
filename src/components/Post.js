@@ -284,8 +284,8 @@ export default function Post({ post, id }) {
       <CommentsWrapper pressedOnComment={pressedOnComment}>
         <CommentsList />
         <CommentLine>
-          <img src={post.userImage} alt="userCommenting"/>
-          <CommentForm>
+          <img src={foundUser.pictureUrl} alt="userCommenting"/>
+          <CommentForm onSubmit={commentOnPost}>
             <input
               data-identifier="input-comment"
               type="text"
@@ -293,7 +293,7 @@ export default function Post({ post, id }) {
               value={comment}
               onChange={(e) => setComment(e.target.value)}
             />
-            <button>
+            <button type='submit' value={comment}>
               <IoPaperPlaneOutline
                 cursor={"pointer"}
                 color="#F3F3F3"
@@ -565,6 +565,7 @@ const CommentLine = styled.div`
     height: 39px;
     border-radius: 26.5px;
     margin-right: 14px;
+    object-fit: cover;
   }
 `;
 
