@@ -14,7 +14,7 @@ function UserSearch({ user, setUsers }) {
     <UserSearchContainer>
       <Link to={`/user/${user.id}`}>
         <div onClick={() => setUsers([])}>
-          <img src={user.pictureUrl} />
+          <img src={user.pictureUrl} alt="user"/>
           <span>{user.username}</span>
         </div>
       </Link>
@@ -141,6 +141,7 @@ const TopBarContainer = styled.div`
   height: 72px;
   width: 100%;
   padding: 0 20px;
+  z-index: 30;
 
   @media (max-width: 937px) {
     height: 144px;

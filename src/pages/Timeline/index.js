@@ -76,8 +76,9 @@ export default function Timeline() {
     <>
       <TimeLineWrapper>
         <TopBar />
-        <PageTitle>Timeline</PageTitle>
-
+        <PageTitle>
+          <div>timeline</div>
+        </PageTitle>
         <Wrapper>
           <InfiniteScroll
             dataLength={posts.length}

@@ -13,6 +13,8 @@ import { Wrapper } from "../../components/Wrapper";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Loader } from "../../components/Loader";
 import { EndMessage } from "../../components/EndMessage";
+import { TrendingBar, TrendingWrapper } from "../../components/TrendingWrapper";
+import HashtagList from "../Timeline/components/HashtagList";
 
 export default function UserPosts() {
   let { id } = useParams();
@@ -22,6 +24,17 @@ export default function UserPosts() {
   const [user, setUser] = useState([]);
   const [page, setPage] = useState(1);
   const [noMore, setNoMore] = useState(true);
+  const [follow, setFollow] = useState(false);
+  const [disabled, setDisabled] = useState(true);
+  const loggedUser = JSON.parse(localStorage.getItem("user")).user;
+
+  const auth = useContext(AuthContext);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${auth.user.token}`,
+    },
+  };
 
   useEffect(() => {
     const getPosts = async () => {
@@ -37,7 +50,22 @@ export default function UserPosts() {
       }
     };
 
+    const getFollow = async () => {
+      try {
+        const res = (await Api.get(`/user/follow/${id}`, {}, config)).data
+          .follow;
+
+        setDisabled(false);
+
+        setFollow(res);
+      } catch (err) {
+        setError(true);
+        setLoading(false);
+      }
+    };
+
     getPosts();
+    getFollow();
   }, [id]);
 
   const { setClickedOn } = useContext(AuthContext);
@@ -72,11 +100,31 @@ export default function UserPosts() {
     setPage(page + 1);
   }
 
+  async function followUser() {
+    try {
+      await Api.post(`/user/follow/${id}`, {}, config);
+
+      setFollow(!follow);
+    } catch (err) {
+      setError(true);
+      setLoading(false);
+    }
+  }
+
   return (
     <TimeLineWrapper onClick={() => setClickedOn(false)}>
-      <PageTitle>
-        <UserImage src={user.pictureUrl} />
-        {loading ? "" : <span>{user.username}'s posts</span>}
+      <PageTitle follow={follow} disabled={disabled}>
+        <div>
+          <UserImage src={user.pictureUrl} />
+          {loading ? "" : <span>{user.username}'s posts</span>}
+        </div>
+        {Number(id) !== Number(loggedUser.id) ? (
+          <button onClick={followUser} disabled={disabled}>
+            {follow ? <span>Unfollow</span> : <span>Follow</span>}
+          </button>
+        ) : (
+          ""
+        )}
       </PageTitle>
       <Wrapper>
         <InfiniteScroll
@@ -90,6 +138,11 @@ export default function UserPosts() {
             <CarregaPosts />
           </PostsWrapper>
         </InfiniteScroll>
+        <TrendingWrapper>
+          <h1>trending</h1>
+          <TrendingBar></TrendingBar>
+          <HashtagList />
+        </TrendingWrapper>
       </Wrapper>
     </TimeLineWrapper>
   );

@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const TrendingWrapper = styled.div`
     width: 301px;
     height: 406px;
-    margin: 43px 25px;
+    margin: 43px 0 43px 25px;
     display: flex;
     flex-direction: column;
     background: #171717;
