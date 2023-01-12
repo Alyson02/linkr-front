@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import CommentsList from "./CommentsList";
 import { AiOutlineComment } from "react-icons/ai";
@@ -11,7 +11,7 @@ import { Api } from "../services/api";
 import swal from "sweetalert";
 import { Link } from "react-router-dom";
 import { UserImage } from "./UserImage";
-import {FaPencilAlt} from "react-icons/fa";
+import { FaPencilAlt } from "react-icons/fa";
 import { useRef } from "react";
 import { useEffect } from "react";
 import { ReactTagify } from "react-tagify";
@@ -19,6 +19,8 @@ import { Tooltip as ReactTooltip, TooltipWrapper } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import Modal from "styled-react-modal";
 import { TailSpin } from "react-loader-spinner";
+import { FiSend } from 'react-icons/fi'
+import { AuthContext } from "../contexts/auth";
 
 export default function Post({ post, id }) {
   const [liked, setLiked] = useState(post.liked);
@@ -29,13 +31,21 @@ export default function Post({ post, id }) {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [postContent,setPostContent] = useState(post.content);
-  const [edit,setEdit] = useState(false);
-  const [editLoading,setEditLoading] = useState(false);
+  const [postContent, setPostContent] = useState(post.content);
+  const [edit, setEdit] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
   const inputRef = useRef(null);
-  const [textPost,setTextPost] = useState(post.content);
+  const [textPost, setTextPost] = useState(post.content);
   let subtitle;
   const foundUser = JSON.parse(localStorage.getItem("user")).user;
+
+  const auth = useContext(AuthContext);
+
+  const config = {
+    headers: {
+      'Authorization': `Bearer ${auth.token}`
+    }
+  }
 
   useEffect(() => {
     if (edit) {
@@ -89,6 +99,21 @@ export default function Post({ post, id }) {
         closeModal();
         setLoading(false);
       });
+  }
+
+  async function commentOnPost(e) {
+    e.preventDefault()
+    try {
+
+      const commentToBeAdded = comment
+
+      setComment('')
+
+      await Api.post(`/post/comment/${post.id}`, { comment: commentToBeAdded }, config)
+
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return (
@@ -294,17 +319,27 @@ const PostWrapper = styled.div`
   background-color: #171717;
   padding: 18px;
   display: flex;
-  justify-content: space-between;
-  width: 100%;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
-  gap: 18px;
+  width: 100%;
   overflow: hidden;
+  flex-direction: column;
+  gap: 20px;
+
+  @media (max-width: 937px) {
+    border-radius: 0px;
+  }
+`
+
+const PostContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 18px;
 
   @media (max-width: 937px) {
     border-radius: 0px;
     gap: 10px;
-    padding: 10px;
   }
 `;
 

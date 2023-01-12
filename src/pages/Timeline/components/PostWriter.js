@@ -1,19 +1,39 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
+import swal from "sweetalert";
 import useWindowDimensions from "../../../components/GetWindowDimensions";
 import { UserImage } from "../../../components/UserImage";
 import { AuthContext } from "../../../contexts/auth";
+import { Api } from "../../../services/api";
 
-export default function PostWriter({
-  setLink,
-  link,
-  content,
-  setContent,
-  onFinish,
-  loading,
-}) {
+export default function PostWriter({ setCleanup }) {
   const { width } = useWindowDimensions();
   const auth = useContext(AuthContext);
+  const [submiting, setSubmiting] = useState(false);
+  const [link, setLink] = useState("");
+  const [content, setContent] = useState("");
+
+  function onFinish(e) {
+    setSubmiting(true);
+    e.preventDefault();
+
+    const body = {
+      link,
+      content,
+    };
+
+    Api.post("/add-post", body)
+      .then(() => {
+        setLink("");
+        setContent("");
+        setSubmiting(false);
+        setCleanup(true);
+      })
+      .catch(() => {
+        swal("", "Ouve um erro ao publicar seu link", "error");
+        setSubmiting(false);
+      });
+  }
 
   return (
     <PostWriterWrapper>
@@ -24,16 +44,16 @@ export default function PostWriter({
           placeholder="http://..."
           value={link}
           onChange={(e) => setLink(e.target.value)}
-          disabled={loading}
+          disabled={submiting}
         />
         <InputContent
           placeholder="Awesome article about #javascript"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          disabled={loading}
+          disabled={submiting}
         />
-        <Button disabled={loading}>
-          {loading ? "Publishing..." : "Publish"}
+        <Button disabled={submiting}>
+          {submiting ? "Publishing..." : "Publish"}
         </Button>
       </PostForm>
     </PostWriterWrapper>

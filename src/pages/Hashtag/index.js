@@ -28,7 +28,6 @@ export default function Hashtag() {
     .catch(error => {
         setError(true);
         setLoading(false);
-        console.log(error.response.data);
     });
 }, []);
 
