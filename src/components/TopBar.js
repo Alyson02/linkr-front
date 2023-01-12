@@ -133,6 +133,7 @@ export default function TopBar() {
 }
 
 const TopBarContainer = styled.div`
+  z-index: 100;
   display: flex;
   position: fixed;
   top: 0;

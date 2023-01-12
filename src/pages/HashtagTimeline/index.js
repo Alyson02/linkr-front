@@ -61,7 +61,7 @@ export default function HashtagTimeline() {
   return (
     <TimeLineWrapper>
       <TopBar />
-      <PageTitle>#{hashtag}</PageTitle>
+      <PageTitle># {hashtag}</PageTitle>
       <PostsWrapper>
         {loading ? (
           <TailSpin

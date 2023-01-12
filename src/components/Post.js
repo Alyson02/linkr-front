@@ -1,8 +1,11 @@
 import { useNavigate } from "react-router";
 import React from "react";
 import styled from "styled-components";
+import CommentsList from "./CommentsList";
+import { AiOutlineComment } from "react-icons/ai";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { FaTrash } from "react-icons/fa";
+import { IoPaperPlaneOutline } from "react-icons/io5";
 import { useState } from "react";
 import { Api } from "../services/api";
 import swal from "sweetalert";
@@ -20,6 +23,9 @@ import { TailSpin } from "react-loader-spinner";
 export default function Post({ post, id }) {
   const [liked, setLiked] = useState(post.liked);
   const [likes, setLikes] = useState(Number(post.likes));
+  const [pressedOnComment, setPressedOnComment] = useState(false);
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState(Number(post.comments));
   const [modalIsOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -86,161 +92,205 @@ export default function Post({ post, id }) {
   }
 
   return (
-    <PostWrapper>
-      <UserLikesContainer>
-        <Link to={id ? `/user/${id}` : `/user/${post.userId}`}>
-          <UserImage src={post.userImage} />
-        </Link>
-        <h3>
-          {liked ? (
-            <TooltipWrapper content={tooltipMessage()}>
-              <BsHeartFill
-                onClick={() => likeOrDislike(post.id)}
-                cursor={"pointer"}
-                color="#AC0000"
-                size={20}
-                id={post.id}
-              />
-            </TooltipWrapper>
-          ) : (
-            <TooltipWrapper content={tooltipMessage()}>
-              <BsHeart
-                onClick={() => likeOrDislike(post.id)}
-                cursor={"pointer"}
-                color="white"
-                size={20}
-              />
-            </TooltipWrapper>
-          )}
-          <ReactTooltip />
-        </h3>
-        <TextLikes>
-          {likes} like{likes > 1 && "s"}
-        </TextLikes>
-      </UserLikesContainer>
-      <PostBody>
-        <ContentContainer>
-          <div>
-            <Link to={`/user/${post.userId}`}>
-              <PostUsername>{post.username}</PostUsername>
-            </Link>
-          </div>
-          {foundUser.id === post.userId ? 
+    <>
+    <MainWrapper>
+      <PostWrapper>
+        <UserLikesContainer>
+          <Link to={id ? `/user/${id}` : `/user/${post.userId}`}>
+            <UserImage src={post.userImage} />
+          </Link>
+          <h3>
+            {liked ? (
+              <TooltipWrapper content={tooltipMessage()}>
+                <BsHeartFill
+                  onClick={() => likeOrDislike(post.id)}
+                  cursor={"pointer"}
+                  color="#AC0000"
+                  width={19.95}
+                  height={17.99}
+                  id={post.id}
+                />
+              </TooltipWrapper>
+            ) : (
+              <TooltipWrapper content={tooltipMessage()}>
+                <BsHeart
+                  onClick={() => likeOrDislike(post.id)}
+                  cursor={"pointer"}
+                  color="white"
+                  width={19.95}
+                  height={17.99}
+                />
+              </TooltipWrapper>
+            )}
+            <ReactTooltip />
+          </h3>
+          <TextLikes>
+            {likes} like{likes > 1 && "s"}
+          </TextLikes>
+          <AiOutlineComment
+              onClick={() => setPressedOnComment(!pressedOnComment)}
+              cursor={"pointer"}
+              color="white"
+              size={21}
+            />
+          <TextLikes>
+            {comments} comment{comments > 1 && "s"}
+          </TextLikes>
+        </UserLikesContainer>
+        <PostBody>
+          <ContentContainer>
             <div>
-              <FaPencilAlt
-                className="edit"
-                cursor={"pointer"}
-                color={"white"}
-                size={'25px'}
-                onClick={()=> setEdit(!edit)}
-              />
-              <FaTrash
-                cursor={"pointer"}
-                color={"white"}
-                size={"25px"}
-                onClick={openModal}
-              />
+              <Link to={`/user/${post.userId}`}>
+                <PostUsername>{post.username}</PostUsername>
+              </Link>
             </div>
-          :
-          ''
-          }
-
-        </ContentContainer>
-        {
-          edit === true ? 
-            <InputContent
-              ref={inputRef}
-              value={postContent}
-              onKeyDown={
-                (e)=>{
-                  if(e.key === 'Escape'){
-                    setEdit(false);
-                  }
-                  if(e.key === 'Enter'){
-                    setEditLoading(true);
-
-                    Api.put(`/post/${post.id}`,{content:postContent}).then((e)=>{
-                      setTextPost(postContent)
-                      setEditLoading(false);
-                      setEdit(false)
-                    }).catch(() =>{
-                      swal("", "Erro ao editar post", "error")
-                      setEditLoading(false);
-                      }
-                    );
-                  }
-                  
-                }
-              }
-              disabled={editLoading}
-              onChange={(e) => {setPostContent(e.target.value);}}
-            /> 
-          : 
-          <ReactTagify 
-            colors={"white"} 
-            tagClicked={(tag)=> navigate('/hashtag/'+tag.replace('#',''))}
-          >
-             <PostContent>{textPost}</PostContent>
-          </ReactTagify>
-
-        }
-        <StyledModal
-          onBackgroundClick={closeModal}
-          isOpen={modalIsOpen}
-          onRequestClose={closeModal}
-          contentLabel="Modal"
-          opacity={1}
-        >
-          {loading ? (
-            <TailSpin
-              height="40"
-              width="100%"
-              color="#1877f2"
-              ariaLabel="tail-spin-loading"
-              radius="1"
-              visible={true}
-              wrapperStyle={{ marginTop: "40px" }}
-            />
-          ) : (
-            <>
-              <ContentModal ref={(_subtitle) => (subtitle = _subtitle)}>
-                Are you sure you want to delete this post?
-              </ContentModal>
+            {foundUser.id === post.userId ? 
               <div>
-                <ButtonModalNo onClick={closeModal}>No, go back</ButtonModalNo>
-                <ButtonModalYes onClick={delPost}>
-                  Yes, delete it
-                </ButtonModalYes>
+                <FaPencilAlt
+                  className="edit"
+                  cursor={"pointer"}
+                  color={"white"}
+                  size={'25px'}
+                  onClick={()=> setEdit(!edit)}
+                />
+                <FaTrash
+                  cursor={"pointer"}
+                  color={"white"}
+                  size={"25px"}
+                  onClick={openModal}
+                />
               </div>
-            </>
+            :
+            ''
+            }
+
+          </ContentContainer>
+          {
+            edit === true ? 
+              <InputContent
+                ref={inputRef}
+                value={postContent}
+                onKeyDown={
+                  (e)=>{
+                    if(e.key === 'Escape'){
+                      setEdit(false);
+                    }
+                    if(e.key === 'Enter'){
+                      setEditLoading(true);
+
+                      Api.put(`/post/${post.id}`,{content:postContent}).then((e)=>{
+                        setTextPost(postContent)
+                        setEditLoading(false);
+                        setEdit(false)
+                      }).catch(() =>{
+                        swal("", "Erro ao editar post", "error")
+                        setEditLoading(false);
+                        }
+                      );
+                    }
+                    
+                  }
+                }
+                disabled={editLoading}
+                onChange={(e) => {setPostContent(e.target.value);}}
+              /> 
+            : 
+            <ReactTagify 
+              colors={"white"} 
+              tagClicked={(tag)=> navigate('/hashtag/'+tag.replace('#',''))}
+            >
+              <PostContent>{textPost}</PostContent>
+            </ReactTagify>
+
+          }
+          <StyledModal
+            onBackgroundClick={closeModal}
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+            contentLabel="Modal"
+            opacity={1}
+          >
+            {loading ? (
+              <TailSpin
+                height="40"
+                width="100%"
+                color="#1877f2"
+                ariaLabel="tail-spin-loading"
+                radius="1"
+                visible={true}
+                wrapperStyle={{ marginTop: "40px" }}
+              />
+            ) : (
+              <>
+                <ContentModal ref={(_subtitle) => (subtitle = _subtitle)}>
+                  Are you sure you want to delete this post?
+                </ContentModal>
+                <div>
+                  <ButtonModalNo onClick={closeModal}>No, go back</ButtonModalNo>
+                  <ButtonModalYes onClick={delPost}>
+                    Yes, delete it
+                  </ButtonModalYes>
+                </div>
+              </>
+            )}
+          </StyledModal>
+          {post.link.success ? (
+            <LinkWrapper onClick={() => window.open(post.link.url)}>
+              <LinkDescriptions>
+                <LinkTitle>{post.link.title}</LinkTitle>
+                <LinkDescription>{post.link.description}</LinkDescription>
+                <LinkUrl>{post.link.url}</LinkUrl>
+              </LinkDescriptions>
+              <LinkImage
+                src={post.link.image}
+                alt=""
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src =
+                    "https://rafaturis.com.br/wp-content/uploads/2014/01/default-placeholder.png";
+                }}
+              />
+            </LinkWrapper>
+          ) : (
+            <LinkUrl style={{ fontSize: 12 }}>{post.link.url}</LinkUrl>
           )}
-        </StyledModal>
-        {post.link.success ? (
-          <LinkWrapper onClick={() => window.open(post.link.url)}>
-            <LinkDescriptions>
-              <LinkTitle>{post.link.title}</LinkTitle>
-              <LinkDescription>{post.link.description}</LinkDescription>
-              <LinkUrl>{post.link.url}</LinkUrl>
-            </LinkDescriptions>
-            <LinkImage
-              src={post.link.image}
-              alt=""
-              onError={({ currentTarget }) => {
-                currentTarget.onerror = null; // prevents looping
-                currentTarget.src =
-                  "https://rafaturis.com.br/wp-content/uploads/2014/01/default-placeholder.png";
-              }}
+        </PostBody>
+      </PostWrapper>
+      <CommentsWrapper pressedOnComment={pressedOnComment}>
+        <CommentsList />
+        <CommentLine>
+          <img src={post.userImage} alt="userCommenting"/>
+          <CommentForm>
+            <input
+              data-identifier="input-comment"
+              type="text"
+              placeholder="write a comment..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
             />
-          </LinkWrapper>
-        ) : (
-          <LinkUrl style={{ fontSize: 12 }}>{post.link.url}</LinkUrl>
-        )}
-      </PostBody>
-    </PostWrapper>
+            <button>
+              <IoPaperPlaneOutline
+                cursor={"pointer"}
+                color="#F3F3F3"
+                size={16}
+              />
+            </button>
+          </CommentForm>          
+        </CommentLine>
+      </CommentsWrapper>
+    </MainWrapper>
+    </>
   );
 }
 
+const MainWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+`;
+
 const PostWrapper = styled.div`
+  z-index: 2;
   background-color: #171717;
   padding: 18px;
   display: flex;
@@ -261,11 +311,16 @@ const PostWrapper = styled.div`
 const UserLikesContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
   align-items: center;
+
+  h3 {
+    margin-top: 19px;
+  }
 `;
 
-const TextLikes = styled.div`
+const TextLikes = styled.p`
+  margin-top: 2px;
+  margin-bottom: 13px;
   font-family: "Lato";
   font-style: normal;
   font-weight: 400;
@@ -273,6 +328,8 @@ const TextLikes = styled.div`
   line-height: 13px;
   text-align: center;
   color: #ffffff;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 const PostBody = styled.div`
@@ -449,4 +506,61 @@ const InputContent = styled.textarea`
   
   color: #4C4C4C;
 
+`;
+
+const CommentsWrapper = styled.div`
+  z-index: 1;
+  margin-top: -76px;
+  min-width: 100%;
+  height: auto;
+  padding: 88px 20px 25px 20px;
+  display: ${(props) => props.pressedOnComment ? "flex" : "none"};
+  background-color: #1E1E1E;
+  border-radius: 16px;
+`;
+
+const CommentLine = styled.div`
+  min-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    margin-top: 1px;
+    width: 39px;
+    height: 39px;
+    border-radius: 26.5px;
+    margin-right: 14px;
+  }
+`;
+
+const CommentForm = styled.form`
+  margin-top: 7px;
+  display: flex;
+  flex-grow: 1;
+
+  input {
+    min-width: 100%;
+    height: 39px;
+    padding: 11px 15px;
+    font-family: 'Lato', sans-serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: 0.05em;
+    color: #575757;
+    background-color: #252525;
+    border: none;
+    border-radius: 8px;
+  }
+
+  button {
+    margin-left: -39px;
+    width: 39px;
+    height: 39px;
+    background-color: #252525;
+    border: none;
+    border-radius: 8px;
+  }
 `;
