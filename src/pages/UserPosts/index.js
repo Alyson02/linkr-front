@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Api } from "../../services/api";
-import Post from "../../components/Post";
+import Post from "../../components/Post/index";
 import { TailSpin } from "react-loader-spinner";
 import PageTitle from "../../components/PageTitle";
 import { TimeLineWrapper } from "../../components/TimeLineWrapper";
@@ -61,6 +61,7 @@ export default function UserPosts() {
       } catch (err) {
         setError(true);
         setLoading(false);
+        setNoMore(false);
       }
     };
 
@@ -84,7 +85,7 @@ export default function UserPosts() {
       return <Message>There are no posts yet</Message>;
     }
 
-    return posts.map((p) => <Post id={id} post={p} key={p.id} />);
+    return posts.map((p, i) => <Post post={p} key={i} />);
   }
 
   async function getPosts() {
@@ -132,7 +133,9 @@ export default function UserPosts() {
           next={fetchData}
           hasMore={noMore}
           loader={<Loader />}
-          endMessage={<EndMessage>Yay! You have seen it all</EndMessage>}
+          endMessage={
+            <EndMessage>{!error && "Yay! You have seen it all"}</EndMessage>
+          }
         >
           <PostsWrapper>
             <CarregaPosts />
