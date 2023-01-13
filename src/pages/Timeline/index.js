@@ -39,7 +39,7 @@ export default function Timeline() {
         setNumPosts(r.data.numPosts)
       })
     },
-    2000
+    10000
   )
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export default function Timeline() {
         { numPosts > oldNumPosts ? <NewPosts onClick={()=>{cleanup(true)}}>{numPosts - oldNumPosts}<p>new posts, load more!</p><AiOutlineReload size={20}/></NewPosts> : ''}
 
         {posts.map((p, i) => (
-          <Post setCleanup={setCleanup} post={p} key={i} />
+          <Post setCleanup={setCleanup} following={following} post={p} key={i} />
         ))}
       </>
     );
