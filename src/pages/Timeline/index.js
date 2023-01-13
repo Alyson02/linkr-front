@@ -55,6 +55,7 @@ export default function Timeline() {
       return <Message>There are no posts yet</Message>;
     }
 
+    console.log(posts);
     return posts.map((p) => <Post post={p} key={p.id} />);
   }
 

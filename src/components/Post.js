@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import React, { useContext } from "react";
 import styled from "styled-components";
-import CommentsList from "./CommentsList";
+import Comment from "./Comment";
 import { AiOutlineComment } from "react-icons/ai";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { FaTrash } from "react-icons/fa";
@@ -19,7 +19,6 @@ import { Tooltip as ReactTooltip, TooltipWrapper } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import Modal from "styled-react-modal";
 import { TailSpin } from "react-loader-spinner";
-import { FiSend } from 'react-icons/fi'
 import { AuthContext } from "../contexts/auth";
 
 export default function Post({ post, id }) {
@@ -28,6 +27,7 @@ export default function Post({ post, id }) {
   const [pressedOnComment, setPressedOnComment] = useState(false);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState(Number(post.comments));
+  const [commentList, setCommentList] = useState([]);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -51,7 +51,15 @@ export default function Post({ post, id }) {
     if (edit) {
       inputRef.current.focus();
     }
-  }, [edit]);
+    Api.get(`/post/comment/${post.id}`)
+    .then((r) => {
+      console.log(r.data);
+      setCommentList(r.data);
+    })
+    .catch((err) =>
+      console.log(err)
+    )
+  }, [edit, setComment]);
 
   function likeOrDislike(id) {
     setLiked(!liked);
@@ -61,7 +69,7 @@ export default function Post({ post, id }) {
       swal("", "Erro ao registrar like", "error")
     );
   }
-
+  
   function tooltipMessage() {
     const previewPleoplesCount = post.peoples.length;
     const pessoa1 = post.peoples[0]?.username;
@@ -282,7 +290,15 @@ export default function Post({ post, id }) {
         </PostBody>
       </PostWrapper>
       <CommentsWrapper pressedOnComment={pressedOnComment}>
-        <CommentsList />
+        {commentList.map((comment) =>
+            <Comment
+              comment={comment.comment}
+              userId={comment.userId} 
+              username={comment.username}
+              pictureUrl={comment.pictureUrl}
+              isPostAuthor={comment.userId === foundUser.id ? true : false}
+            />
+        )}
         <CommentLine>
           <img src={foundUser.pictureUrl} alt="userCommenting"/>
           <CommentForm onSubmit={commentOnPost}>
@@ -549,11 +565,13 @@ const CommentsWrapper = styled.div`
   height: auto;
   padding: 88px 20px 25px 20px;
   display: ${(props) => props.pressedOnComment ? "flex" : "none"};
+  flex-direction: column;
   background-color: #1E1E1E;
   border-radius: 16px;
 `;
 
 const CommentLine = styled.div`
+  margin-top: 19px;
   min-width: 100%;
   display: flex;
   justify-content: center;
