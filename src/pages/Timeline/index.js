@@ -25,6 +25,13 @@ export default function Timeline() {
 
   useEffect(() => {
     setLoading(true);
+
+    if (cleanup === true) {
+      setPage(1);
+      setCleanup(false);
+      return;
+    }
+
     Api.get(`/posts?page=${page}&limit=10`)
       .then((r) => {
         setPosts(r.data);
@@ -34,11 +41,8 @@ export default function Timeline() {
       .catch(() => {
         setError(true);
         setLoading(false);
+        setNoMore(false);
       });
-
-    if (cleanup === true) {
-      setCleanup(false);
-    }
   }, [cleanup]);
 
   function CarregaPosts() {
@@ -50,17 +54,13 @@ export default function Timeline() {
         </Message>
       );
     }
-
-    if (posts.length === 0) {
-      return <Message>There are no posts yet</Message>;
-    }
-
-    return posts.map((p) => <Post post={p} key={p.id} />);
+    return posts.map((p, i) => (
+      <Post setCleanup={setCleanup} post={p} key={i} />
+    ));
   }
 
   async function getPosts() {
     const res = await Api.get(`/posts?page=${page}&limit=10`);
-    console.log(res);
     return res.data;
   }
 
@@ -85,7 +85,9 @@ export default function Timeline() {
             next={fetchData}
             hasMore={noMore}
             loader={<Loader />}
-            endMessage={<EndMessage>Yay! You have seen it all</EndMessage>}
+            endMessage={
+              <EndMessage>{!error && "There are no posts yet"}</EndMessage>
+            }
           >
             <PostsWrapper>
               <PostWriter setCleanup={setCleanup} />
