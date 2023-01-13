@@ -60,6 +60,7 @@ export default function Timeline() {
       return <Message>No posts found from your friends</Message>;
     }
 
+    console.log(posts);
     return posts.map((p) => <Post post={p} key={p.id} />);
   }
 

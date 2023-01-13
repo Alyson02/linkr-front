@@ -1,8 +1,11 @@
 import { useNavigate } from "react-router";
 import React, { useContext } from "react";
 import styled from "styled-components";
+import Comment from "./Comment";
+import { AiOutlineComment } from "react-icons/ai";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { FaTrash } from "react-icons/fa";
+import { IoPaperPlaneOutline } from "react-icons/io5";
 import { useState } from "react";
 import { Api } from "../services/api";
 import swal from "sweetalert";
@@ -16,12 +19,16 @@ import { Tooltip as ReactTooltip, TooltipWrapper } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import Modal from "styled-react-modal";
 import { TailSpin } from "react-loader-spinner";
-import { FiSend } from 'react-icons/fi'
 import { AuthContext } from "../contexts/auth";
 
 export default function Post({ post, id }) {
   const [liked, setLiked] = useState(post.liked);
   const [likes, setLikes] = useState(Number(post.likes));
+  const [pressedOnComment, setPressedOnComment] = useState(false);
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState(Number(post.comments));
+  const [commentList, setCommentList] = useState([]);
+  const [followedList, setFollowedList] = useState([]);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -32,7 +39,6 @@ export default function Post({ post, id }) {
   const [textPost, setTextPost] = useState(post.content);
   let subtitle;
   const foundUser = JSON.parse(localStorage.getItem("user")).user;
-  const [comment, setComment] = useState('')
 
   const auth = useContext(AuthContext);
 
@@ -48,6 +54,26 @@ export default function Post({ post, id }) {
     }
   }, [edit]);
 
+  useEffect(() => {
+    Api.get(`/post/comment/${post.id}`)
+    .then((r) => {
+      setCommentList(r.data);
+    })
+    .catch((err) =>
+      console.log(err)
+    )
+  }, [post, setComment]);
+
+  useEffect(() => {
+    Api.get(`/followList`)
+    .then((r) => {
+      setFollowedList(r.data);
+    })
+    .catch((err) =>
+    console.log(err)
+    )
+  }, []);
+
   function likeOrDislike(id) {
     setLiked(!liked);
     liked ? setLikes(likes - 1) : setLikes(likes + 1);
@@ -56,7 +82,7 @@ export default function Post({ post, id }) {
       swal("", "Erro ao registrar like", "error")
     );
   }
-
+  
   function tooltipMessage() {
     const previewPleoplesCount = post.peoples.length;
     const pessoa1 = post.peoples[0]?.username;
@@ -112,8 +138,9 @@ export default function Post({ post, id }) {
   }
 
   return (
-    <PostWrapper>
-      <PostContainer>
+    <>
+    <MainWrapper>
+      <PostWrapper>
         <UserLikesContainer>
           <Link to={id ? `/user/${id}` : `/user/${post.userId}`}>
             <UserImage src={post.userImage} />
@@ -125,7 +152,8 @@ export default function Post({ post, id }) {
                   onClick={() => likeOrDislike(post.id)}
                   cursor={"pointer"}
                   color="#AC0000"
-                  size={20}
+                  width={19.95}
+                  height={17.99}
                   id={post.id}
                 />
               </TooltipWrapper>
@@ -135,7 +163,8 @@ export default function Post({ post, id }) {
                   onClick={() => likeOrDislike(post.id)}
                   cursor={"pointer"}
                   color="white"
-                  size={20}
+                  width={19.95}
+                  height={17.99}
                 />
               </TooltipWrapper>
             )}
@@ -143,6 +172,15 @@ export default function Post({ post, id }) {
           </h3>
           <TextLikes>
             {likes} like{likes > 1 && "s"}
+          </TextLikes>
+          <AiOutlineComment
+              onClick={() => setPressedOnComment(!pressedOnComment)}
+              cursor={"pointer"}
+              color="white"
+              size={21}
+            />
+          <TextLikes>
+            {comments} comment{comments > 1 && "s"}
           </TextLikes>
         </UserLikesContainer>
         <PostBody>
@@ -152,14 +190,14 @@ export default function Post({ post, id }) {
                 <PostUsername>{post.username}</PostUsername>
               </Link>
             </div>
-            {foundUser.id === post.userId ?
+            {foundUser.id === post.userId ? 
               <div>
                 <FaPencilAlt
                   className="edit"
                   cursor={"pointer"}
                   color={"white"}
                   size={'25px'}
-                  onClick={() => setEdit(!edit)}
+                  onClick={()=> setEdit(!edit)}
                 />
                 <FaTrash
                   cursor={"pointer"}
@@ -168,47 +206,47 @@ export default function Post({ post, id }) {
                   onClick={openModal}
                 />
               </div>
-              :
-              ''
+            :
+            ''
             }
 
           </ContentContainer>
           {
-            edit === true ?
+            edit === true ? 
               <InputContent
                 ref={inputRef}
                 value={postContent}
                 onKeyDown={
-                  (e) => {
-                    if (e.key === 'Escape') {
+                  (e)=>{
+                    if(e.key === 'Escape'){
                       setEdit(false);
                     }
-                    if (e.key === 'Enter') {
+                    if(e.key === 'Enter'){
                       setEditLoading(true);
 
-                      Api.put(`/post/${post.id}`, { content: postContent }).then((e) => {
+                      Api.put(`/post/${post.id}`,{content:postContent}).then((e)=>{
                         setTextPost(postContent)
                         setEditLoading(false);
                         setEdit(false)
-                      }).catch(() => {
+                      }).catch(() =>{
                         swal("", "Erro ao editar post", "error")
                         setEditLoading(false);
-                      }
+                        }
                       );
                     }
-
+                    
                   }
                 }
                 disabled={editLoading}
-                onChange={(e) => { setPostContent(e.target.value); }}
-              />
-              :
-              <ReactTagify
-                colors={"white"}
-                tagClicked={(tag) => navigate('/hashtag/' + tag.replace('#', ''))}
-              >
-                <PostContent>{textPost}</PostContent>
-              </ReactTagify>
+                onChange={(e) => {setPostContent(e.target.value);}}
+              /> 
+            : 
+            <ReactTagify 
+              colors={"white"} 
+              tagClicked={(tag)=> navigate('/hashtag/'+tag.replace('#',''))}
+            >
+              <PostContent>{textPost}</PostContent>
+            </ReactTagify>
 
           }
           <StyledModal
@@ -263,84 +301,52 @@ export default function Post({ post, id }) {
             <LinkUrl style={{ fontSize: 12 }}>{post.link.url}</LinkUrl>
           )}
         </PostBody>
-      </PostContainer>
-      <InputContainer onSubmit={commentOnPost}>
-        <img src={foundUser.pictureUrl} alt='avatar' />
-        <div>
-          <input
-            placeholder='write a comment...'
-            onChange={(e) => setComment(e.target.value)}
-            value={comment}
-          />
-          <button type='submit' value={comment}>< FiSend size={20} color="#C6C6C6" /></button>
-        </div>
-      </InputContainer>
-    </PostWrapper>
+      </PostWrapper>
+      <CommentsWrapper pressedOnComment={pressedOnComment}>
+        {commentList.map((comment, index) =>
+            <Comment 
+              key={index}
+              comment={comment.comment}
+              userId={comment.userId} 
+              username={comment.username}
+              pictureUrl={comment.pictureUrl}
+              isPostAuthor={comment.userId === post.userId ? true : false}
+              isFollowed={followedList.find(element => element > comment.userId) ? true : false }
+            />
+        )}
+        <CommentLine>
+          <img src={foundUser.pictureUrl} alt="userCommenting"/>
+          <CommentForm onSubmit={commentOnPost}>
+            <input
+              data-identifier="input-comment"
+              type="text"
+              placeholder="write a comment..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+            <button type='submit' value={comment}>
+              <IoPaperPlaneOutline
+                cursor={"pointer"}
+                color="#F3F3F3"
+                size={16}
+              />
+            </button>
+          </CommentForm>          
+        </CommentLine>
+      </CommentsWrapper>
+    </MainWrapper>
+    </>
   );
 }
 
-const InputContainer = styled.form`
+const MainWrapper = styled.div`
   display: flex;
-  width: inherit;
-  border-radius: 8px;
-  cursor: text;
-  align-items: center;
-  justify-content: space-between;
-  padding-right: 10px;
-  gap: 15px;
-
-  div {
-    display: flex;
-    align-items: center;
-    position: relative;
-    width: inherit;
-    background-color: #252525;
-    border-radius: 8px;
-    padding: 0 0.7vw;
-
-    input {
-      display: flex;
-      align-items: center;
-      width: calc(100% - 20px);
-      height: 45px;
-      border-radius: 8px;
-      border: none;
-      font-size: 14px;
-      color: #c6c6c6;
-      font-family: "Lato";
-      background-color: #252525
-    }
-
-    input:focus {
-      box-shadow: 0;
-      outline: 0;
-    }
-
-    input::placeholder {
-      color: #575757;
-      font-style: italic;
-    }
-
-    button {
-      background-color: #252525;
-      border: none;
-    }
-  }
-
-  img {
-    border-radius: 26.5px;
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    cursor: pointer;
-    @media (max-width: 937px) {
-      width: 30px;
-      height: 30px;
-    }
-}
-`
+  flex-direction: column;
+  justify-content: flex-start;
+`;
 
 const PostWrapper = styled.div`
+  z-index: 2;
   background-color: #171717;
   padding: 18px;
   display: flex;
@@ -348,7 +354,6 @@ const PostWrapper = styled.div`
   border-radius: 16px;
   width: 100%;
   overflow: hidden;
-  flex-direction: column;
   gap: 20px;
 
   @media (max-width: 937px) {
@@ -356,26 +361,19 @@ const PostWrapper = styled.div`
   }
 `
 
-const PostContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  gap: 18px;
-
-  @media (max-width: 937px) {
-    border-radius: 0px;
-    gap: 10px;
-  }
-`;
-
 const UserLikesContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
   align-items: center;
+
+  h3 {
+    margin-top: 19px;
+  }
 `;
 
-const TextLikes = styled.div`
+const TextLikes = styled.p`
+  margin-top: 2px;
+  margin-bottom: 13px;
   font-family: "Lato";
   font-style: normal;
   font-weight: 400;
@@ -383,6 +381,8 @@ const TextLikes = styled.div`
   line-height: 13px;
   text-align: center;
   color: #ffffff;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 const PostBody = styled.div`
@@ -559,4 +559,68 @@ const InputContent = styled.textarea`
   
   color: #4C4C4C;
 
+`;
+
+const CommentsWrapper = styled.div`
+  z-index: 1;
+  margin-top: -76px;
+  min-width: 100%;
+  height: auto;
+  padding: 88px 20px 25px 20px;
+  display: ${(props) => props.pressedOnComment ? "flex" : "none"};
+  flex-direction: column;
+  background-color: #1E1E1E;
+  border-radius: 16px;
+`;
+
+const CommentLine = styled.div`
+  margin-top: 19px;
+  min-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    margin-top: 1px;
+    width: 39px;
+    height: 39px;
+    border-radius: 26.5px;
+    margin-right: 14px;
+    object-fit: cover;
+  }
+`;
+
+const CommentForm = styled.form`
+  margin-top: 7px;
+  display: flex;
+  flex-grow: 1;
+
+  input {
+    min-width: 100%;
+    height: 39px;
+    padding: 11px 15px;
+    font-family: 'Lato', sans-serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: 0.05em;
+    color: #575757;
+    background-color: #252525;
+    border: none;
+    border-radius: 8px;
+  }
+
+  button {
+    margin-left: -39px;
+    padding-right: 16px;
+    width: 39px;
+    height: 39px;
+    background-color: #252525;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-radius: 8px;
+  }
 `;

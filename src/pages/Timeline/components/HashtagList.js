@@ -48,11 +48,12 @@ const List = styled.ul`
     padding-left: 16px;
 
     li {
-        margin-bottom: 23px;
+        margin-bottom: 7px;
         font-family: 'Lato', sans-serif;
         font-style: normal;
         font-weight: 700;
         font-size: 19px;
+        line-height: 23px;
         letter-spacing: 0.05em;
         color: #FFFFFF;
         cursor: pointer;
