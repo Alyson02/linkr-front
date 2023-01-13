@@ -85,7 +85,7 @@ export default function Timeline() {
 
     return (
       <>
-        { numPosts > oldNumPosts ? <NewPosts onClick={()=>{cleanup(true)}}>{numPosts - oldNumPosts}<p>new posts, load more!</p><AiOutlineReload size={20}/></NewPosts> : ''}
+        { numPosts > oldNumPosts ? <NewPosts onClick={()=>{setCleanup(!cleanup)}}>{numPosts - oldNumPosts}<p>new posts, load more!</p><AiOutlineReload size={20}/></NewPosts> : ''}
 
         {posts.map((p, i) => (
           <Post setCleanup={setCleanup} following={following} post={p} key={i} />
@@ -151,6 +151,7 @@ const NewPosts = styled.button`
   font-size: 16px;
   line-height: 19px;
   border:none;
+  cursor: pointer;
   p{
     margin: 0 5px;
     color: #FFFFFF;
