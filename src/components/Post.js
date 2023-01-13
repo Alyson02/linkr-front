@@ -53,7 +53,6 @@ export default function Post({ post, id }) {
     }
     Api.get(`/post/comment/${post.id}`)
     .then((r) => {
-      console.log(r.data);
       setCommentList(r.data);
     })
     .catch((err) =>
@@ -296,7 +295,7 @@ export default function Post({ post, id }) {
               userId={comment.userId} 
               username={comment.username}
               pictureUrl={comment.pictureUrl}
-              isPostAuthor={comment.userId === foundUser.id ? true : false}
+              isPostAuthor={comment.userId === post.userId ? true : false}
             />
         )}
         <CommentLine>
@@ -345,18 +344,6 @@ const PostWrapper = styled.div`
     border-radius: 0px;
   }
 `
-
-const PostContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  gap: 18px;
-
-  @media (max-width: 937px) {
-    border-radius: 0px;
-    gap: 10px;
-  }
-`;
 
 const UserLikesContainer = styled.div`
   display: flex;
