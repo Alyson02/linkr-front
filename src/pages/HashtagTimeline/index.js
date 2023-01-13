@@ -21,15 +21,20 @@ export default function HashtagTimeline() {
   const [error, setError] = useState(false);
   const [page, setPage] = useState(1);
   const [noMore, setNoMore] = useState(true);
+  const [following, setFollowing] = useState("");
   let { hashtag } = useParams();
   let navigate = useNavigate();
 
   useEffect(() => {
     Api.get(`/hashtag/${hashtag}?page=1&limit=10`)
       .then((r) => {
-        setPosts(r.data);
+        setPosts(r.data.posts);
+        setFollowing(r.data.following);
         setLoading(false);
         setPage(page + 1);
+        if (r.data.posts.length < 10) {
+          setNoMore(false);
+        }
       })
       .catch((e) => {
         if (e.response.status === 404) {
@@ -61,13 +66,13 @@ export default function HashtagTimeline() {
       return <Message>There are no posts yet</Message>;
     }
 
-    return posts.map((p, i) => <Post post={p} key={i} />);
+    return posts.map((p, i) => <Post post={p} key={i} following={following} />);
   }
 
   async function getPosts() {
     const res = await Api.get(`/hashtag/${hashtag}?page=${page}&limit=10`);
     console.log(res);
-    return res.data;
+    return res.data.posts;
   }
 
   async function fetchData() {

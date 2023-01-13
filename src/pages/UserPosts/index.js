@@ -26,6 +26,7 @@ export default function UserPosts() {
   const [noMore, setNoMore] = useState(true);
   const [follow, setFollow] = useState(false);
   const [disabled, setDisabled] = useState(true);
+  const [following, setFollowing] = useState("");
   const loggedUser = JSON.parse(localStorage.getItem("user")).user;
 
   const auth = useContext(AuthContext);
@@ -44,7 +45,12 @@ export default function UserPosts() {
         setUser(res.user);
         setLoading(false);
         setPage(page + 1);
+        setFollowing(res.following);
+        if (res.posts.length < 10) {
+          setNoMore(false);
+        }
       } catch (err) {
+        console.log(err);
         setError(true);
         setLoading(false);
       }
@@ -59,6 +65,7 @@ export default function UserPosts() {
 
         setFollow(res);
       } catch (err) {
+        console.log(err);
         setError(true);
         setLoading(false);
         setNoMore(false);
@@ -85,7 +92,7 @@ export default function UserPosts() {
       return <Message>There are no posts yet</Message>;
     }
 
-    return posts.map((p, i) => <Post post={p} key={i} />);
+    return posts.map((p, i) => <Post post={p} key={i} following={following} />);
   }
 
   async function getPosts() {
@@ -107,6 +114,7 @@ export default function UserPosts() {
 
       setFollow(!follow);
     } catch (err) {
+      console.log(err);
       setError(true);
       setLoading(false);
     }
