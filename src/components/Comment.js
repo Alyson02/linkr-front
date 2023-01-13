@@ -7,14 +7,18 @@ export default function Comment({
     username,
     pictureUrl,
     isPostAuthor,
+    isFollowed,
 }) {
 
     const [subtitle, setSubtitle] = useState("");
 
     useEffect(() => {
-        console.log(isPostAuthor);
+        console.log(isFollowed);
         if (isPostAuthor) {
             setSubtitle("• post’s author");
+        }
+        if (isFollowed) {
+            setSubtitle("• following");
         }
       }, []);
 

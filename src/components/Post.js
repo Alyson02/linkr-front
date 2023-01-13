@@ -28,6 +28,7 @@ export default function Post({ post, id }) {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState(Number(post.comments));
   const [commentList, setCommentList] = useState([]);
+  const [followedList, setFollowedList] = useState([]);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -51,6 +52,9 @@ export default function Post({ post, id }) {
     if (edit) {
       inputRef.current.focus();
     }
+  }, [edit]);
+
+  useEffect(() => {
     Api.get(`/post/comment/${post.id}`)
     .then((r) => {
       setCommentList(r.data);
@@ -58,7 +62,17 @@ export default function Post({ post, id }) {
     .catch((err) =>
       console.log(err)
     )
-  }, [edit, setComment]);
+  }, [post, setComment]);
+
+  useEffect(() => {
+    Api.get(`/followList`)
+    .then((r) => {
+      setFollowedList(r.data);
+    })
+    .catch((err) =>
+    console.log(err)
+    )
+  }, []);
 
   function likeOrDislike(id) {
     setLiked(!liked);
@@ -289,13 +303,15 @@ export default function Post({ post, id }) {
         </PostBody>
       </PostWrapper>
       <CommentsWrapper pressedOnComment={pressedOnComment}>
-        {commentList.map((comment) =>
-            <Comment
+        {commentList.map((comment, index) =>
+            <Comment 
+              key={index}
               comment={comment.comment}
               userId={comment.userId} 
               username={comment.username}
               pictureUrl={comment.pictureUrl}
               isPostAuthor={comment.userId === post.userId ? true : false}
+              isFollowed={followedList.find(element => element > comment.userId) ? true : false }
             />
         )}
         <CommentLine>
