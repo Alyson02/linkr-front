@@ -46,7 +46,7 @@ import {
   UserLikesContainer,
 } from "./Styles";
 
-export default function Post({ post, id, setCleanup }) {
+export default function Post({ post, followList, id, setCleanup }) {
   const [liked, setLiked] = useState(post.liked);
   const [likes, setLikes] = useState(Number(post.likes));
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -62,7 +62,6 @@ export default function Post({ post, id, setCleanup }) {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState(Number(post.comments));
   const [commentList, setCommentList] = useState([]);
-  const [followedList, setFollowedList] = useState([]);
 
   let subtitle;
   const foundUser = JSON.parse(localStorage.getItem("user")).user;
@@ -90,16 +89,6 @@ export default function Post({ post, id, setCleanup }) {
       console.log(err)
     )
   }, [post, setComment]);
-
-  useEffect(() => {
-    Api.get(`/followList`)
-    .then((r) => {
-      setFollowedList(r.data);
-    })
-    .catch((err) =>
-    console.log(err)
-    )
-  }, []);
 
   function likeOrDislike(id) {
     setLiked(!liked);
@@ -354,7 +343,7 @@ export default function Post({ post, id, setCleanup }) {
               username={comment.username}
               pictureUrl={comment.pictureUrl}
               isPostAuthor={comment.userId === post.userId ? true : false}
-              isFollowed={followedList.find(element => element > comment.userId) ? true : false }
+              isFollowed={followList.find(element => element > comment.userId) ? true : false }
             />
         )}
         <CommentLine>
