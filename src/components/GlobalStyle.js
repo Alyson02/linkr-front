@@ -52,6 +52,12 @@ table {
 *{
 	box-sizing: border-box;
 }
+.infinite-scroll-component__outerdiv{
+	overflow: hidden !important;
+}
+.infinite-scroll-component {
+	overflow: hidden !important;
+}
 `;
 
 export default GlobalStyle;
