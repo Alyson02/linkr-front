@@ -1,11 +1,95 @@
-const MainWrapper = styled.div`
+import styled from "styled-components";
+
+export const RepostedInfo = styled.div`
+  position: absolute;
+  left: 12px;
+  top: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+`;
+
+export const RepostedPeople = styled.span`
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  color: #ffffff;
+`;
+
+export const BackIfRepost = styled.div`
+  padding-top: ${(props) => (props.reposted ? "33px" : "0px")};
+  background-color: #1e1e1e;
+  border-radius: 16px;
+  position: relative;
+  @media (max-width: 937px) {
+    border-radius: 0;
+  }
+`;
+
+export const InputContainer = styled.form`
+  display: flex;
+  width: inherit;
+  border-radius: 8px;
+  cursor: text;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 10px;
+  gap: 15px;
+  div {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: inherit;
+    background-color: #252525;
+    border-radius: 8px;
+    padding: 0 0.7vw;
+    input {
+      display: flex;
+      align-items: center;
+      width: calc(100% - 20px);
+      height: 45px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      color: #c6c6c6;
+      font-family: "Lato";
+      background-color: #252525;
+    }
+    input:focus {
+      box-shadow: 0;
+      outline: 0;
+    }
+    input::placeholder {
+      color: #575757;
+      font-style: italic;
+    }
+    button {
+      background-color: #252525;
+      border: none;
+    }
+  }
+  img {
+    border-radius: 26.5px;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    cursor: pointer;
+    @media (max-width: 937px) {
+      width: 30px;
+      height: 30px;
+    }
+  }
+`;
+
+export const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
 `;
 
-const PostWrapper = styled.div`
-  z-index: 2;
+export const PostWrapper = styled.div`
   background-color: #171717;
   padding: 18px;
   display: flex;
@@ -13,24 +97,33 @@ const PostWrapper = styled.div`
   border-radius: 16px;
   width: 100%;
   overflow: hidden;
+  flex-direction: row;
   gap: 20px;
-
+  z-index: 2;
   @media (max-width: 937px) {
     border-radius: 0px;
   }
-`
+`;
 
-const UserLikesContainer = styled.div`
+export const PostContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  h3 {
-    margin-top: 19px;
+  justify-content: space-between;
+  width: 100%;
+  gap: 18px;
+  @media (max-width: 937px) {
+    border-radius: 0px;
+    gap: 10px;
   }
 `;
 
-const TextLikes = styled.p`
+export const UserLikesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+`;
+
+export const TextLikes = styled.p`
   margin-top: 2px;
   margin-bottom: 13px;
   font-family: "Lato";
@@ -44,19 +137,28 @@ const TextLikes = styled.p`
   white-space: nowrap;
 `;
 
-const PostBody = styled.div`
+export const TextIconsPost = styled.div`
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  text-align: center;
+  color: #ffffff;
+`;
+
+export const PostBody = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
   width: 100%;
   gap: 5px;
-
   a {
     text-decoration: none;
   }
 `;
 
-const PostUsername = styled.p`
+export const PostUsername = styled.p`
   font-family: "Lato";
   font-style: normal;
   font-weight: 400;
@@ -65,7 +167,7 @@ const PostUsername = styled.p`
   color: #ffffff;
 `;
 
-const PostContent = styled.p`
+export const PostContent = styled.p`
   font-family: "Lato";
   font-style: normal;
   font-weight: 400;
@@ -74,7 +176,7 @@ const PostContent = styled.p`
   color: #b7b7b7;
 `;
 
-const LinkWrapper = styled.div`
+export const LinkWrapper = styled.div`
   border: 1px solid #4d4d4d;
   border-radius: 11px;
   display: flex;
@@ -87,14 +189,14 @@ const LinkWrapper = styled.div`
   }
 `;
 
-const LinkDescriptions = styled.div`
+export const LinkDescriptions = styled.div`
   padding: 24px;
   @media (max-width: 937px) {
     padding: 8px;
   }
 `;
 
-const LinkTitle = styled.h1`
+export const LinkTitle = styled.h1`
   font-family: "Lato";
   font-style: normal;
   font-weight: 400;
@@ -109,7 +211,7 @@ const LinkTitle = styled.h1`
   }
 `;
 
-const LinkDescription = styled.p`
+export const LinkDescription = styled.p`
   font-family: "Lato";
   font-style: normal;
   font-weight: 400;
@@ -117,24 +219,28 @@ const LinkDescription = styled.p`
   line-height: 13px;
   color: #9b9595;
   margin: 10px 0;
+  overflow-wrap: break-word;
+  word-break: break-all;
   @media (max-width: 937px) {
     font-size: 9px;
   }
 `;
 
-const LinkUrl = styled.p`
+export const LinkUrl = styled.p`
   font-family: "Lato";
   font-style: normal;
   font-weight: 400;
   font-size: 11px;
   line-height: 13px;
+  overflow-wrap: break-word;
+  word-break: break-all;
   color: #cecece;
   @media (max-width: 937px) {
     font-size: 9px;
   }
 `;
 
-const LinkImage = styled.img`
+export const LinkImage = styled.img`
   width: 155px;
   height: 155px;
   object-fit: cover;
@@ -146,61 +252,16 @@ const LinkImage = styled.img`
   }
 `;
 
-const StyledModal = Modal.styled`
-  width: 597px;
-  height: 262px;
-  display:flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: #333333;
-  border-radius: 50px;
-`;
-
-const ContentModal = styled.h1`
-  width: 338px;
-  margin-bottom: 30px;
-  font-family: "Lato";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 34px;
-  line-height: 41px;
-  text-align: center;
-  color: #ffffff;
-`;
-
-const ButtonModalNo = styled.button`
-  cursor: pointer;
-  width: 134px;
-  height: 37px;
-  border: none;
-  margin-right: 15px;
-  background: #ffffff;
-  border-radius: 5px;
-  color: #1877f2;
-`;
-
-const ButtonModalYes = styled.button`
-  width: 134px;
-  height: 37px;
-  border: none;
-  background: #1877f2;
-  border-radius: 5px;
-  color: #ffffff;
-  cursor: pointer;
-`;
-
-const ContentContainer = styled.div`
+export const ContentContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  svg{
+  svg {
     margin-right: 10px;
   }
 `;
 
-
-const InputContent = styled.textarea`
+export const InputContent = styled.textarea`
   background: #ffffff;
   border-radius: 5px;
   width: 100%;
@@ -210,17 +271,15 @@ const InputContent = styled.textarea`
   padding: 12px;
   min-height: 66px;
   resize: vertical;
-  font-family: 'Lato';
+  font-family: "Lato";
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
-  
-  color: #4C4C4C;
-
+  color: #4c4c4c;
 `;
 
-const CommentsWrapper = styled.div`
+export const CommentsWrapper = styled.div`
   z-index: 1;
   margin-top: -76px;
   min-width: 100%;
@@ -232,7 +291,7 @@ const CommentsWrapper = styled.div`
   border-radius: 16px;
 `;
 
-const CommentLine = styled.div`
+export const CommentLine = styled.div`
   margin-top: 19px;
   min-width: 100%;
   display: flex;
@@ -249,7 +308,7 @@ const CommentLine = styled.div`
   }
 `;
 
-const CommentForm = styled.form`
+export const CommentForm = styled.form`
   margin-top: 7px;
   display: flex;
   flex-grow: 1;
@@ -283,3 +342,183 @@ const CommentForm = styled.form`
     border-radius: 8px;
   }
 `;
+
+
+// const MainWrapper = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: flex-start;
+// `;
+
+// const PostWrapper = styled.div`
+//   z-index: 2;
+//   background-color: #171717;
+//   padding: 18px;
+//   display: flex;
+//   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+//   border-radius: 16px;
+//   width: 100%;
+//   overflow: hidden;
+//   gap: 20px;
+
+//   @media (max-width: 937px) {
+//     border-radius: 0px;
+//   }
+// `
+
+// const UserLikesContainer = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+
+//   h3 {
+//     margin-top: 19px;
+//   }
+// `;
+
+// const TextLikes = styled.p`
+//   margin-top: 2px;
+//   margin-bottom: 13px;
+//   font-family: "Lato";
+//   font-style: normal;
+//   font-weight: 400;
+//   font-size: 11px;
+//   line-height: 13px;
+//   text-align: center;
+//   color: #ffffff;
+//   overflow: hidden;
+//   white-space: nowrap;
+// `;
+
+// const PostBody = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: start;
+//   width: 100%;
+//   gap: 5px;
+
+//   a {
+//     text-decoration: none;
+//   }
+// `;
+
+// const PostUsername = styled.p`
+//   font-family: "Lato";
+//   font-style: normal;
+//   font-weight: 400;
+//   font-size: 19px;
+//   line-height: 23px;
+//   color: #ffffff;
+// `;
+
+// const PostContent = styled.p`
+//   font-family: "Lato";
+//   font-style: normal;
+//   font-weight: 400;
+//   font-size: 17px;
+//   line-height: 20px;
+//   color: #b7b7b7;
+// `;
+
+// const LinkWrapper = styled.div`
+//   border: 1px solid #4d4d4d;
+//   border-radius: 11px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   width: 100%;
+//   cursor: pointer;
+//   @media (max-width: 937px) {
+//     align-items: flex-start;
+//   }
+// `;
+
+// const LinkDescriptions = styled.div`
+//   padding: 24px;
+//   @media (max-width: 937px) {
+//     padding: 8px;
+//   }
+// `;
+
+// const LinkTitle = styled.h1`
+//   font-family: "Lato";
+//   font-style: normal;
+//   font-weight: 400;
+//   font-size: 16px;
+//   line-height: 19px;
+//   line-break: normal;
+//   overflow-wrap: break-word;
+//   word-break: break-all;
+//   color: #cecece;
+//   @media (max-width: 937px) {
+//     font-size: 11px;
+//   }
+// `;
+
+// const LinkDescription = styled.p`
+//   font-family: "Lato";
+//   font-style: normal;
+//   font-weight: 400;
+//   font-size: 11px;
+//   line-height: 13px;
+//   color: #9b9595;
+//   margin: 10px 0;
+//   @media (max-width: 937px) {
+//     font-size: 9px;
+//   }
+// `;
+
+// const LinkUrl = styled.p`
+//   font-family: "Lato";
+//   font-style: normal;
+//   font-weight: 400;
+//   font-size: 11px;
+//   line-height: 13px;
+//   color: #cecece;
+//   @media (max-width: 937px) {
+//     font-size: 9px;
+//   }
+// `;
+
+// const LinkImage = styled.img`
+//   width: 155px;
+//   height: 155px;
+//   object-fit: cover;
+//   border-radius: inherit;
+//   border-bottom-left-radius: 0;
+//   border-top-left-radius: 0;
+//   @media (max-width: 937px) {
+//     width: 95px;
+//   }
+// `;
+
+// const ContentContainer = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+//   svg{
+//     margin-right: 10px;
+//   }
+// `;
+
+
+// const InputContent = styled.textarea`
+//   background: #ffffff;
+//   border-radius: 5px;
+//   width: 100%;
+//   border: none;
+//   outline: none;
+//   border-radius: 5px;
+//   padding: 12px;
+//   min-height: 66px;
+//   resize: vertical;
+//   font-family: 'Lato';
+//   font-style: normal;
+//   font-weight: 400;
+//   font-size: 14px;
+//   line-height: 17px;
+  
+//   color: #4C4C4C;
+
+// `;
+

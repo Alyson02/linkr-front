@@ -14,9 +14,9 @@ function UserSearch({ user, setUsers }) {
     <UserSearchContainer>
       <Link to={`/user/${user.id}`}>
         <div onClick={() => setUsers([])}>
-          <img src={user.pictureUrl} alt="user"/>
+          <img src={user.pictureUrl} alt="user" />
           <span>{user.username}</span>
-          {user.following ? <span>• following</span> : ''}
+          {user.following ? <span>• following</span> : ""}
         </div>
       </Link>
     </UserSearchContainer>
@@ -59,8 +59,7 @@ export default function TopBar() {
     try {
       const res = (await Api.get(`/user/search/${value}`)).data;
       setUsers(res);
-    } catch (err) {
-    }
+    } catch (err) {}
   }
 
   return (
@@ -268,7 +267,7 @@ const UserSearchContainer = styled.div`
   }
 
   span:nth-child(3) {
-    color: #C5C5C5;
+    color: #c5c5c5;
   }
 
   a {
@@ -287,6 +286,7 @@ const LogoutButton = styled.button`
   border: none;
   text-align: center;
   border-radius: 0px 0px 20px 20px;
+  z-index: 1000;
   cursor: pointer;
 
   p {
@@ -298,5 +298,9 @@ const LogoutButton = styled.button`
     line-height: 20px;
     letter-spacing: 0.05em;
     color: #ffffff;
+  }
+
+  @media (max-width: 937px) {
+    top: 144px;
   }
 `;

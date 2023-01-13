@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { TailSpin } from "react-loader-spinner";
 import { Message } from "../../components/Message";
 import PageTitle from "../../components/PageTitle";
-import Post from "../../components/Post";
+import Post from "../../components/Post/index";
 import { PostsWrapper } from "../../components/PostsWrapper";
 import { Wrapper } from "../../components/Wrapper";
 import { TimeLineWrapper } from "../../components/TimeLineWrapper";
@@ -26,6 +26,13 @@ export default function Timeline() {
   
   useEffect(() => {
     setLoading(true);
+
+    if (cleanup === true) {
+      setPage(1);
+      setCleanup(false);
+      return;
+    }
+
     Api.get(`/posts?page=${page}&limit=10`)
       .then((r) => {
         setFollowing(r.data.following)
@@ -36,11 +43,8 @@ export default function Timeline() {
       .catch(() => {
         setError(true);
         setLoading(false);
+        setNoMore(false);
       });
-
-    if (cleanup === true) {
-      setCleanup(false);
-    }
   }, [cleanup]);
 
   function CarregaPosts() {
@@ -56,18 +60,19 @@ export default function Timeline() {
     if(posts.length === 0 && following === '' && loading===false){
       return <Message>You don't follow anyone yet. Search for new friends!</Message>;
     }
+
     else if (posts.length === 0 && following !== '' && loading===false){
       return <Message>No posts found from your friends</Message>;
     }
 
-    console.log(posts);
-    return posts.map((p) => <Post post={p} key={p.id} />);
+    return posts.map((p, i) => (
+      <Post setCleanup={setCleanup} post={p} key={i} />
+    ));
   }
 
   async function getPosts() {
     const res = await Api.get(`/posts?page=${page}&limit=10`);
-    console.log(res);
-    return res.data;
+    return res.data.posts;
   }
 
   async function fetchData() {
@@ -91,7 +96,6 @@ export default function Timeline() {
             next={fetchData}
             hasMore={noMore}
             loader={<Loader />}
-            endMessage={<EndMessage>Yay! You have seen it all</EndMessage>}
           >
             <PostsWrapper>
               <PostWriter setCleanup={setCleanup} />

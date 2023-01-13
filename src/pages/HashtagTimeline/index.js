@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { TailSpin } from "react-loader-spinner";
 import { Message } from "../../components/Message";
 import PageTitle from "../../components/PageTitle";
-import Post from "../../components/Post";
+import Post from "../../components/Post/index";
 import { PostsWrapper } from "../../components/PostsWrapper";
 import { TimeLineWrapper } from "../../components/TimeLineWrapper";
 import TopBar from "../../components/TopBar";
@@ -39,6 +39,7 @@ export default function HashtagTimeline() {
         }
         setError(true);
         setLoading(false);
+        setNoMore(false);
       });
 
     if (cleanup === true) {
@@ -60,7 +61,7 @@ export default function HashtagTimeline() {
       return <Message>There are no posts yet</Message>;
     }
 
-    return posts.map((p) => <Post post={p} key={p.id} />);
+    return posts.map((p, i) => <Post post={p} key={i} />);
   }
 
   async function getPosts() {
@@ -87,7 +88,9 @@ export default function HashtagTimeline() {
           next={fetchData}
           hasMore={noMore}
           loader={<Loader />}
-          endMessage={<EndMessage>Yay! You have seen it all</EndMessage>}
+          endMessage={
+            <EndMessage>{!error && "Yay! You have seen it all"}</EndMessage>
+          }
         >
           <PostsWrapper>
             <CarregaPosts />

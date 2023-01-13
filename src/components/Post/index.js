@@ -1,35 +1,56 @@
 import { useNavigate } from "react-router";
 import React, { useContext } from "react";
-import styled from "styled-components";
-import Comment from "./Comment";
+import Comment from "../Comment";
+import { IoPaperPlaneOutline } from "react-icons/io5";
 import { AiOutlineComment } from "react-icons/ai";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
-import { FaTrash } from "react-icons/fa";
-import { IoPaperPlaneOutline } from "react-icons/io5";
+import { FaRetweet, FaTrash } from "react-icons/fa";
 import { useState } from "react";
-import { Api } from "../services/api";
+import { Api } from "../../services/api";
 import swal from "sweetalert";
 import { Link } from "react-router-dom";
-import { UserImage } from "./UserImage";
+import { UserImage } from "../UserImage";
 import { FaPencilAlt } from "react-icons/fa";
 import { useRef } from "react";
 import { useEffect } from "react";
 import { ReactTagify } from "react-tagify";
 import { Tooltip as ReactTooltip, TooltipWrapper } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
-import Modal from "styled-react-modal";
-import { TailSpin } from "react-loader-spinner";
-import { AuthContext } from "../contexts/auth";
+import { FiSend } from "react-icons/fi";
+import { AuthContext } from "../../contexts/auth";
+import { GenericModal } from "../Modal";
+import {
+  BackIfRepost,
+  CommentForm,
+  CommentLine,
+  CommentsWrapper,
+  ContentContainer,
+  InputContainer,
+  InputContent,
+  LinkDescription,
+  LinkDescriptions,
+  LinkImage,
+  LinkTitle,
+  LinkUrl,
+  LinkWrapper,
+  MainWrapper,
+  PostBody,
+  PostContainer,
+  PostContent,
+  PostUsername,
+  PostWrapper,
+  RepostedInfo,
+  RepostedPeople,
+  TextIconsPost,
+  TextLikes,
+  UserLikesContainer,
+} from "./Styles";
 
-export default function Post({ post, id }) {
+export default function Post({ post, id, setCleanup }) {
   const [liked, setLiked] = useState(post.liked);
   const [likes, setLikes] = useState(Number(post.likes));
-  const [pressedOnComment, setPressedOnComment] = useState(false);
-  const [comment, setComment] = useState("");
-  const [comments, setComments] = useState(Number(post.comments));
-  const [commentList, setCommentList] = useState([]);
-  const [followedList, setFollowedList] = useState([]);
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [modalRepostIsOpen, setModalRepostIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [postContent, setPostContent] = useState(post.content);
@@ -37,6 +58,12 @@ export default function Post({ post, id }) {
   const [editLoading, setEditLoading] = useState(false);
   const inputRef = useRef(null);
   const [textPost, setTextPost] = useState(post.content);
+  const [pressedOnComment, setPressedOnComment] = useState(false);
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState(Number(post.comments));
+  const [commentList, setCommentList] = useState([]);
+  const [followedList, setFollowedList] = useState([]);
+
   let subtitle;
   const foundUser = JSON.parse(localStorage.getItem("user")).user;
 
@@ -82,7 +109,7 @@ export default function Post({ post, id }) {
       swal("", "Erro ao registrar like", "error")
     );
   }
-  
+
   function tooltipMessage() {
     const previewPleoplesCount = post.peoples.length;
     const pessoa1 = post.peoples[0]?.username;
@@ -108,37 +135,61 @@ export default function Post({ post, id }) {
   function closeModal() {
     setIsOpen(false);
   }
-  function delPost() {
-    setLoading(true);
+    function delPost() {
+        setLoading(true);
 
-    Api.delete(`/post/${post.id}`)
-      .then(() => {
-        navigate("/timeline");
-      })
-      .catch(() => {
-        swal("", "Erro ao deletar post", "error");
-        closeModal();
-        setLoading(false);
-      });
-  }
-
-  async function commentOnPost(e) {
-    e.preventDefault()
-    try {
-
-      const commentToBeAdded = comment
-
-      setComment('')
-
-      await Api.post(`/post/comment/${post.id}`, { comment: commentToBeAdded }, config)
-
-    } catch (err) {
-      console.log(err)
+        Api.delete(`/post/${post.id}`)
+        .then(() => {
+            navigate("/timeline");
+            closeModal();
+            setLoading(false);
+        })
+        .catch(() => {
+            swal("", "Erro ao deletar post", "error");
+            closeModal();
+            setLoading(false);
+        });
     }
-  }
+
+    async function commentOnPost(e) {
+        e.preventDefault()
+        try {
+
+        const commentToBeAdded = comment
+
+        setComment('')
+
+        await Api.post(`/post/comment/${post.id}`, { comment: commentToBeAdded }, config)
+
+        } catch (err) {
+        console.log(err)
+        }
+    }
+
+    async function repost() {
+        try {
+        const res = await Api.post(`/posts/repost/${post.id}`);
+        setModalRepostIsOpen(false);
+        setCleanup(true);
+        } catch (err) {
+        console.log(err);
+        setModalRepostIsOpen(false);
+        }
+    }
 
   return (
-    <>
+    <BackIfRepost reposted={post.reposted}>
+    {post.reposted && (
+    <RepostedInfo>
+        <FaRetweet cursor={"pointer"} color="white" size={20} />
+        <RepostedPeople>
+        Re-posted by{" "}
+        {post.repost.userId == auth.user.user.id
+            ? "you"
+            : post.repost.username}
+        </RepostedPeople>
+    </RepostedInfo>
+    )}
     <MainWrapper>
       <PostWrapper>
         <UserLikesContainer>
@@ -182,6 +233,13 @@ export default function Post({ post, id }) {
           <TextLikes>
             {comments} comment{comments > 1 && "s"}
           </TextLikes>
+          <FaRetweet
+            onClick={() => setModalRepostIsOpen(true)}
+            cursor={"pointer"}
+            color="white"
+            size={20}
+          />
+          <TextIconsPost>{post.reposts}</TextIconsPost>
         </UserLikesContainer>
         <PostBody>
           <ContentContainer>
@@ -249,37 +307,22 @@ export default function Post({ post, id }) {
             </ReactTagify>
 
           }
-          <StyledModal
-            onBackgroundClick={closeModal}
-            isOpen={modalIsOpen}
-            onRequestClose={closeModal}
-            contentLabel="Modal"
-            opacity={1}
-          >
-            {loading ? (
-              <TailSpin
-                height="40"
-                width="100%"
-                color="#1877f2"
-                ariaLabel="tail-spin-loading"
-                radius="1"
-                visible={true}
-                wrapperStyle={{ marginTop: "40px" }}
-              />
-            ) : (
-              <>
-                <ContentModal ref={(_subtitle) => (subtitle = _subtitle)}>
-                  Are you sure you want to delete this post?
-                </ContentModal>
-                <div>
-                  <ButtonModalNo onClick={closeModal}>No, go back</ButtonModalNo>
-                  <ButtonModalYes onClick={delPost}>
-                    Yes, delete it
-                  </ButtonModalYes>
-                </div>
-              </>
-            )}
-          </StyledModal>
+          <GenericModal
+              open={modalIsOpen}
+              close={closeModal}
+              loading={loading}
+              word="delete"
+              phrase="Are you sure you want to delete this post?"
+              action={delPost}
+            />
+            <GenericModal
+                open={modalRepostIsOpen}
+                close={() => setModalRepostIsOpen(false)}
+                action={repost}
+                word="share"
+                phrase="Do you want to re-post this link?"
+                loading={loading}
+            />
           {post.link.success ? (
             <LinkWrapper onClick={() => window.open(post.link.url)}>
               <LinkDescriptions>
@@ -335,6 +378,6 @@ export default function Post({ post, id }) {
         </CommentLine>
       </CommentsWrapper>
     </MainWrapper>
-    </>
+    </BackIfRepost>
   );
 }
