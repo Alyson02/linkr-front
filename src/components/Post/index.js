@@ -46,7 +46,7 @@ import {
   UserLikesContainer,
 } from "./Styles";
 
-export default function Post({ post, followList, id, setCleanup }) {
+export default function Post({ post, following, id, setCleanup }) {
   const [liked, setLiked] = useState(post.liked);
   const [likes, setLikes] = useState(Number(post.likes));
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -343,7 +343,7 @@ export default function Post({ post, followList, id, setCleanup }) {
               username={comment.username}
               pictureUrl={comment.pictureUrl}
               isPostAuthor={comment.userId === post.userId ? true : false}
-              isFollowed={followList.find(element => element > comment.userId) ? true : false }
+              isFollowed={following.find(element => element > comment.userId) ? true : false }
             />
         )}
         <CommentLine>

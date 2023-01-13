@@ -53,7 +53,7 @@ export default function Timeline() {
 
     Api.get(`/posts?page=${page}&limit=10`)
       .then((r) => {
-        setFollowing(r.data.following)
+        setFollowing(r.data.following);
         setPosts(r.data.posts);
         setLoading(false);
         setPage(page + 1);
